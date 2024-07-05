@@ -1,0 +1,67 @@
+
+###########################
+# load packages
+library(microeco)
+library(magrittr)
+###########################
+# output directory
+output_dir <- "./Output/1.Amplicon/StageⅡ_amplicon_microtable"
+# load data
+input_path <- file.path(output_dir, "amplicon_16S_microtable.RData")
+# first check whether saved data path exists
+if(! file.exists(input_path)){
+	stop("Please first run Step3_Preprocess_microtable.R !")
+}
+load(input_path)
+###########################
+set.seed(123)
+
+tmp_microtable <- clone(amplicon_16S_microtable)
+# the minimum of sample sequences is over 20000
+tmp_microtable$sample_sums() %>% range
+
+# use trans_norm to do all the normalization
+tmp <- trans_norm$new(dataset = tmp_microtable)
+
+# Rarefaction
+amplicon_16S_microtable_rarefy <- tmp$norm(method = "rarefy", sample.size = 20000)
+# save the microtable object to output directory
+save(amplicon_16S_microtable_rarefy, file = file.path(output_dir, "amplicon_16S_microtable_rarefy.RData"), compress = TRUE)
+
+# CLR: Centered log-ratio normalization <ISBN:978-0-412-28060-3> <doi: 10.3389/fmicb.2017.02224>
+amplicon_16S_microtable_CLR <- tmp$norm(method = "CLR")
+save(amplicon_16S_microtable_CLR, file = file.path(output_dir, "amplicon_16S_microtable_CLR.RData"), compress = TRUE)
+
+# rclr: Robust centered log-ratio normalization <doi: doi:10.1128/msystems.00016-19>
+amplicon_16S_microtable_RCLR <- tmp$norm(method = "rclr")
+save(amplicon_16S_microtable_RCLR, file = file.path(output_dir, "amplicon_16S_microtable_RCLR.RData"), compress = TRUE)
+
+# GMPR: Geometric mean of pairwise ratios <doi: 10.7717/peerj.4600>
+amplicon_16S_microtable_GMPR <- tmp$norm(method = "GMPR")
+save(amplicon_16S_microtable_GMPR, file = file.path(output_dir, "amplicon_16S_microtable_GMPR.RData"), compress = TRUE)
+
+# CSS: Cumulative sum scaling normalization based on the metagenomeSeq package <doi:10.1038/nmeth.2658>
+amplicon_16S_microtable_CSS <- tmp$norm(method = "CSS")
+save(amplicon_16S_microtable_CSS, file = file.path(output_dir, "amplicon_16S_microtable_CSS.RData"), compress = TRUE)
+
+# TMM: Trimmed mean of M-values method based on the normLibSizes function of edgeR package <doi: 10.1186/gb-2010-11-3-r25>
+amplicon_16S_microtable_TMM <- tmp$norm(method = "TMM")
+save(amplicon_16S_microtable_TMM, file = file.path(output_dir, "amplicon_16S_microtable_TMM.RData"), compress = TRUE)
+
+# RLE: Relative log expression.
+amplicon_16S_microtable_RLE <- tmp$norm(method = "RLE")
+save(amplicon_16S_microtable_RLE, file = file.path(output_dir, "amplicon_16S_microtable_RLE.RData"), compress = TRUE)
+
+# TSS: Total sum scaling. Abundance is divided by the sequencing depth.
+amplicon_16S_microtable_TSS <- tmp$norm(method = "TSS")
+save(amplicon_16S_microtable_TSS, file = file.path(output_dir, "amplicon_16S_microtable_TSS.RData"), compress = TRUE)
+
+
+
+
+
+
+
+
+
+
