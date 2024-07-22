@@ -1,3 +1,6 @@
+## 
+## Beta diversity analysis that do not refer to environmental factors
+## 
 
 
 ###########################
@@ -8,18 +11,18 @@ library(ggplot2)
 theme_set(theme_bw())
 ###########################
 # create an output directory if it does not exist
-output_dir <- "./Output/1.Amplicon/StageⅤ_BetaDiversity"
+output_dir <- "./Output/1.Amplicon/Stage5_BetaDiversity"
 if(! dir.exists(output_dir)){
 	dir.create(output_dir, recursive = TRUE)
 }
 # load data
-input_path <- "./Output/1.Amplicon/StageⅡ_amplicon_microtable/amplicon_16S_microtable.RData"
+input_path <- "./Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable.RData"
 # first check whether saved data path exists
 if(! file.exists(input_path)){
-	stop("Please first run the scripts in StageⅡ !")
+	stop("Please first run the scripts in Stage2 !")
 }
 load(input_path)
-input_path <- "./Output/1.Amplicon/StageⅡ_amplicon_microtable/amplicon_16S_microtable_rarefy.RData"
+input_path <- "./Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable_rarefy.RData"
 load(input_path)
 ###########################
 
@@ -35,11 +38,13 @@ tmp_microtable_rarefy_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", 
 tmp_microtable_rarefy_rhizo$tidy_dataset()
 
 
-# calculate Bray-Curtis dissimilarity for rarefied rhizosphere data
+# calculate Bray-Curtis and UniFrac dissimilarity for rarefied rhizosphere data
 measure <- "bray"
-tmp_microtable_rarefy_rhizo$cal_betadiv(method = measure)
+tmp_microtable_rarefy_rhizo$cal_betadiv(method = measure, unifrac = TRUE)
 # save the Bray-Curtis dissimilarity matrix
 write.csv(tmp_microtable_rarefy_rhizo$beta_diversity[[measure]], file.path(output_dir, "BetaDiv_rarefy_rhizo_bray.csv"))
+write.csv(tmp_microtable_rarefy_rhizo$beta_diversity$wei_unifrac, file.path(output_dir, "BetaDiv_rarefy_rhizo_weightedUniFrac.csv"))
+write.csv(tmp_microtable_rarefy_rhizo$beta_diversity$unwei_unifrac, file.path(output_dir, "BetaDiv_rarefy_rhizo_unweightedUniFrac.csv"))
 
 # calculate Aitchison dissimilarity for non-rarefied rhizosphere data
 measure <- "aitchison"
@@ -53,7 +58,7 @@ measure <- "bray"
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo, group = "Group", measure = measure)
 t1$cal_ordination(method = "PCoA", ncomp = 2)
 write.csv(t1$res_ordination$scores, file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCoA_Bray_Score.csv"))
-
+# visualization
 g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Group", plot_type = c("point", "ellipse"))
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCoA_Bray.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
@@ -88,7 +93,9 @@ cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_nonrarefy_NMDS_Aitchison
 
 
 # PCA at genus level
+# first generate a microtable object with genera as features
 tmp_microtable_rarefy_rhizo_genus <- tmp_microtable_rarefy_rhizo$merge_taxa(taxa = "Genus")
+# remove unidentified genera
 tmp_microtable_rarefy_rhizo_genus$tax_table %<>% .[.$Genus != "g__", ]
 # also delete the genera with number in the names
 tmp_microtable_rarefy_rhizo_genus$tax_table %<>% .[!grepl("\\d+", .$Genus), ]

@@ -1,3 +1,6 @@
+## 
+## Preprocess the raw microtable object
+## 
 
 
 ###################################################
@@ -6,16 +9,14 @@ library(microeco)
 library(magrittr)
 ###################################################
 # check output directory
-output_dir <- "./Output/1.Amplicon/StageⅡ_amplicon_microtable"
-if(! dir.exists(output_dir)){
-	stop("Please first run Step2_Import_amplicon_files.R!")
-}
-###################################################
-
-# load raw microtable object generated in Step2
+output_dir <- "./Output/1.Amplicon/Stage2_amplicon_microtable"
+# load raw microtable object RData generated in last step
 input_path <- file.path(output_dir, "amplicon_16S_microtable_raw.RData")
+if(!file.exists(input_path)){
+	stop("Please first run the script in last step !")
+}
 load(input_path)
-
+###################################################
 # clone an object for the convenience of operation
 tmp_microtable <- clone(amplicon_16S_microtable_raw)
 
@@ -25,13 +26,13 @@ tmp_microtable$tax_table %<>% base::subset(Kingdom == "k__Archaea" | Kingdom == 
 # remove the lines containing mitochondria or chloroplast regardless of word case in the tax_table
 tmp_microtable$filter_pollution(taxa = c("mitochondria", "chloroplast"))
 
-# prune all the data inside the object
+# tidy all the data inside the object
 tmp_microtable$tidy_dataset()
 
-# we use ASV as the prefix to generate new feature names instead of raw character strings
+# use ASV as the prefix to generate new feature names instead of raw character strings
 tmp_microtable$rename_taxa(newname_prefix = "ASV_")
 
-# have a look on the range of sample sequencing depths
+# have a look on the range of sequencing depths across samples
 tmp_microtable$sample_sums() %>% range
 
 # assign factor levels to make the elements ordered in the following statistics and visualization

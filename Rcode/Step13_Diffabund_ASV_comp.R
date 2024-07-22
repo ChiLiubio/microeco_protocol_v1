@@ -4,18 +4,20 @@
 # load packages
 library(microeco)
 library(magrittr)
-
+library(ggplot2)
+theme_set(theme_bw())
 ######################################################
 # create an output directory if it does not exist
-output_dir <- "./Output/1.Amplicon/StageⅥ_Diff_abund"
+output_dir <- "./Output/1.Amplicon/Stage6_Diff_abund"
 if(! dir.exists(output_dir)){
-	stop("Please first run the script in Step12!")
+	stop("Please first run the script in the last step!")
 }
 
-
 ######################################################
+# load tmp_microtable_rhizo object saved in the last step
+load(file.path(output_dir, "tmp_microtable_rhizo.RData"))
 
-# load differential test data saved in last step
+# load differential test objects saved in the last step
 load(file.path(output_dir, "ASV_Fertilization_metagenomeSeq.RData"))
 load(file.path(output_dir, "ASV_Fertilization_ALDEx2_t.RData"))
 load(file.path(output_dir, "ASV_Fertilization_ALDEx2_kw.RData"))
@@ -26,11 +28,12 @@ load(file.path(output_dir, "ASV_Fertilization_linda.RData"))
 load(file.path(output_dir, "ASV_Fertilization_maaslin2.RData"))
 load(file.path(output_dir, "ASV_Fertilization_wilcox_GMPR.RData"))
 load(file.path(output_dir, "ASV_Fertilization_wilcox_Wrench.RData"))
+######################################################
 
-
-# Then analyze significant feature intersections among all the methods using above results
-# select the significant ASVs
+# Then analyze intersection of significant feature among all the methods using above results
+# use list to store all the results
 diff_taxa_list <- list()
+# select the significant ASVs for each method
 diff_taxa_list[["metagenomeSeq"]] <- tmp_metagenomeSeq$res_diff %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
 diff_taxa_list[["ALDEx2_t"]] <- tmp_ALDEx2_t$res_diff %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
 diff_taxa_list[["ALDEx2_kw"]] <- tmp_ALDEx2_kw$res_diff %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
@@ -64,7 +67,7 @@ tmp_transvennobj <- trans_venn$new(tmp_mtobj, ratio = "numratio", name_joint = "
 # only show the elements with a relative large number
 tmp_transvennobj$data_summary %<>% .[.$Counts > 4, ]
 
-g1 <- tmp_transvennobj$plot_bar(sort_samples = FALSE, left_background_fill = "white")
+g1 <- tmp_transvennobj$plot_bar(sort_samples = FALSE)
 cowplot::save_plot(file.path(output_dir, "diff_methods_singlefactor_threegroups_venn_bar.png"), g1, base_aspect_ratio = 1.5, dpi = 300, base_height = 7)
 
 
@@ -73,9 +76,9 @@ cowplot::save_plot(file.path(output_dir, "diff_methods_singlefactor_threegroups_
 tmp_transvennobj_mt <- tmp_transvennobj$trans_comm(use_frequency = TRUE)
 tmp_transvennobj_mt$otu_table %<>% .[, colnames(.) %in% rownames(tmp_transvennobj$data_summary)]
 tmp_transvennobj_mt$tidy_dataset()
+# calculate the relative abundance, i.e. ratio
 tmp_transvennobj_mt$cal_abund()
 
-library(ggplot2)
 library(tibble)
 tmp_x <- tmp_transvennobj$data_summary %>% rownames_to_column %>% .[order(.$Counts, decreasing = TRUE), ] %>% .$rowname
 
@@ -83,5 +86,14 @@ tmp_transvennobj_mt_abund <- trans_abund$new(dataset = tmp_transvennobj_mt, taxr
 g2 <- tmp_transvennobj_mt_abund$plot_bar(bar_full = FALSE, legend_text_italic = T, xtext_angle = 50, order_x = tmp_x) + ylab("Ratio (%)") + 
 	theme(legend.position = "left", plot.margin = unit(c(0, 0, 0, 4), "cm"))
 cowplot::save_plot(file.path(output_dir, "diff_methods_singlefactor_threegroups_venn_comp_Genus.png"), g2, base_aspect_ratio = 1.5, dpi = 300, base_height = 8)
+
+
+
+
+
+
+
+
+
 
 

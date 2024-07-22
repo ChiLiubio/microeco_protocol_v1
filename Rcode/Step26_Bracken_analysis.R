@@ -1,3 +1,7 @@
+## 
+## Statistical analysis and visualization on imported abundances
+## 
+
 
 ######################################################
 # load packages
@@ -6,13 +10,12 @@ library(magrittr)
 library(ggplot2)
 theme_set(theme_bw())
 ######################################################
-# create an output directory if it does not exist
-output_dir <- "Output/2.Metagenome/StageⅨ_Bracken"
-if(! dir.exists(output_dir)){
-	stop("Please first run the last step to import files!")
-}
+output_dir <- "Output/2.Metagenome/Stage9_Bracken"
 # load data
 input_path <- file.path(output_dir, "Bracken_microtable_relFALSE.RData")
+if(!file.exists(input_path)){
+	stop("Please first run the script in last step !")
+}
 load(input_path)
 input_path <- file.path(output_dir, "Bracken_microtable_relTRUE_K1.RData")
 load(input_path)
@@ -187,19 +190,19 @@ cowplot::save_plot(file.path(output_dir, "Bracken_anova_multiway_AST.png"), g1, 
 
 # multiple factors test; beta regression
 # select genera with high relative abundance
-t1 <- trans_diff$new(dataset = tmp_microtable, method = "betareg", formula = "Cropping + Fertilization + Compartment", taxa_level = "Genus", filter_thres = 0.001)
+t1 <- trans_diff$new(dataset = tmp_microtable, method = "glmm_beta", formula = "Cropping + Fertilization + Compartment", taxa_level = "Genus", filter_thres = 0.001)
 write.csv(t1$res_diff, file.path(output_dir, "Bracken_betareg_Genus.csv"))
 
 t1$res_diff %<>% .[.$Factors != "(Intercept)", ]
-t1$res_diff %<>% .[.$Factors != "(phi)", ]
+t1$res_diff %<>% .[!is.na(.$Estimate), ]
 # further filter features
 tmp_table <- t1$res_diff
-tmp_feature_1 <- tmp_table %>% .[.$Factors == "CroppingRC" & grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa
-tmp_feature_2 <- tmp_table %>% .[.$Factors == "FertilizationNPK" & grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa
+tmp_feature_1 <- tmp_table %>% .[.$Factors == "CroppingRC" & grepl("**", .$Significance, fixed = TRUE), ] %>% .$Taxa
+tmp_feature_2 <- tmp_table %>% .[.$Factors == "FertilizationNPK" & grepl("**", .$Significance, fixed = TRUE), ] %>% .$Taxa
 t1$res_diff %<>% .[.$Taxa %in% c(tmp_feature_1, tmp_feature_2), ]
 
 g1 <- t1$plot_diff_bar(filter_feature = "", heatmap_cell = "Estimate", heatmap_lab_fill = "Estimate")
-cowplot::save_plot(file.path(output_dir, "Bracken_betareg_Genus.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 10)
+cowplot::save_plot(file.path(output_dir, "Bracken_betareg_Genus_extremsig.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 10)
 
 
 

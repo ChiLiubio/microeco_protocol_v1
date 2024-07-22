@@ -1,4 +1,6 @@
-
+## 
+## Differential abundance test at ASV level
+## 
 
 
 ######################################################
@@ -8,19 +10,19 @@ library(magrittr)
 
 ######################################################
 # create an output directory if it does not exist
-output_dir <- "./Output/1.Amplicon/StageⅥ_Diff_abund"
+output_dir <- "./Output/1.Amplicon/Stage6_Diff_abund"
 if(! dir.exists(output_dir)){
 	dir.create(output_dir, recursive = TRUE)
 }
 # load data
-input_path <- "./Output/1.Amplicon/StageⅡ_amplicon_microtable/amplicon_16S_microtable.RData"
+input_path <- "./Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable.RData"
 # first check whether saved data path exists
 if(! file.exists(input_path)){
-	stop("Please first run the scripts in StageⅡ !")
+	stop("Please first run the scripts in Stage2 !")
 }
 load(input_path)
 ######################################################
-# process data
+# preprocess data
 # select data for rhizosphere soil
 tmp_microtable_rhizo <- clone(amplicon_16S_microtable)
 tmp_microtable_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
@@ -35,6 +37,8 @@ tmp_microtable_rhizo$filter_taxa(rel_abund = 0.0001)
 tmp_microtable_rhizo$tax_table %<>% .[.$Genus != "g__", ]
 tmp_microtable_rhizo$tax_table %<>% .[!grepl("\\d+", .$Genus), ]
 tmp_microtable_rhizo$tidy_dataset()
+
+save(tmp_microtable_rhizo, file = file.path(output_dir, "tmp_microtable_rhizo.RData"), compress = TRUE)
 
 
 #############################################

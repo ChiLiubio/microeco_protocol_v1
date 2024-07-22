@@ -1,3 +1,6 @@
+## 
+## use trans_venn class to analyze the intersection of core taxa in different compartments
+## 
 
 
 ######################################################
@@ -7,23 +10,30 @@ library(magrittr)
 library(ggplot2)
 ######################################################
 # check output directory
-output_dir <- "./Output/1.Amplicon/StageⅢ_coremicrobiome"
+output_dir <- "./Output/1.Amplicon/Stage3_coremicrobiome"
 if(! dir.exists(output_dir)){
-	stop("Please first run the scrip in Step5 !")
+	stop("Please first run the scrip in last step !")
 }
+load(file.path(output_dir, "Coretaxa_Bulk.RData"))
+load(file.path(output_dir, "Coretaxa_Rhizosphere.RData"))
+load(file.path(output_dir, "Coretaxa_Endophyte.RData"))
 
+# load rarefied microtable object
+input_path <- "./Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable_rarefy.RData"
+load(input_path)
 ######################################################
 
+# analyze difference across groups
 # generate a total core-taxa microtable object according to names
-tmp <- clone(tmp_microtable)
-tmp$otu_table %<>% .[rownames(.) %in% c(S$taxa_names(), RS$taxa_names(), R$taxa_names()), ]
-tmp$tidy_dataset()
+tmp_microtable <- clone(amplicon_16S_microtable_rarefy)
+tmp_microtable$otu_table %<>% .[rownames(.) %in% c(S$taxa_names(), RS$taxa_names(), R$taxa_names()), ]
+tmp_microtable$tidy_dataset()
 # merge samples into compartments
-tmp_merge <- tmp$merge_samples(use_group = "Compartment")
+tmp_merge <- tmp_microtable$merge_samples("Compartment")
 
 # analyze intersection set with trans_venn class
 trans_vennobj <- trans_venn$new(tmp_merge, ratio = "numratio", name_joint = "-")
-# remove the sets with 0
+# remove the elements with 0
 trans_vennobj$data_summary %<>% .[.$Counts != 0, ]
 # output data_summary to file
 write.csv(trans_vennobj$data_summary, file.path(output_dir, "Coretaxa_intersection.csv"))

@@ -1,3 +1,6 @@
+## 
+## Perform core taxa analysis for each compartment
+## 
 
 
 ######################################################
@@ -7,25 +10,25 @@ library(magrittr)
 library(ggplot2)
 ######################################################
 # create an output directory if it does not exist
-output_dir <- "./Output/1.Amplicon/StageⅢ_coremicrobiome"
+output_dir <- "./Output/1.Amplicon/Stage3_coremicrobiome"
 if(! dir.exists(output_dir)){
 	dir.create(output_dir, recursive = TRUE)
 }
-# load data
-input_path <- "./Output/1.Amplicon/StageⅡ_amplicon_microtable/amplicon_16S_microtable_rarefy.RData"
-# first check whether saved data path exists
+# load rarefied data
+input_path <- "./Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable_rarefy.RData"
+# first check whether data path exists
 if(! file.exists(input_path)){
-	stop("Please first run the scripts in StageⅡ !")
+	stop("Please first run all the scripts in Stage2 !")
 }
 load(input_path)
 ######################################################
 
 
-# use name tmp_microtable for convenience
+# use temporary name tmp_microtable for convenience
 tmp_microtable <- clone(amplicon_16S_microtable_rarefy)
 
 
-# define core taxa: occurrence frequency 50%; relative abundance 0.05%
+# define core taxa: occurrence frequency 50%; mean relative abundance 0.05%
 freq <- 0.5
 abund <- 0.0005
 
@@ -50,6 +53,9 @@ res <- rbind(data.frame(compartment = "S", ASV = S$taxa_names()), data.frame(com
 write.csv(res, file.path(output_dir, "Coretaxa_calc_compartments.csv"))
 
 
+save(S, file = file.path(output_dir, "Coretaxa_Bulk.RData"), compress = TRUE)
+save(RS, file = file.path(output_dir, "Coretaxa_Rhizosphere.RData"), compress = TRUE)
+save(R, file = file.path(output_dir, "Coretaxa_Endophyte.RData"), compress = TRUE)
 
 
 

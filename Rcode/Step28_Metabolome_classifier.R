@@ -1,3 +1,6 @@
+## 
+## Machine learning for metabolome data
+## 
 
 
 ######################################################
@@ -6,13 +9,12 @@ library(microeco)
 library(magrittr)
 library(readxl)
 ######################################################
-# create an output directory if it does not exist
-output_dir <- "Output/3.Metabolome/StageⅩ_Metabolome"
-if(! dir.exists(output_dir)){
-	dir.create(output_dir, recursive = TRUE)
-}
+output_dir <- "Output/3.Metabolome/Stage10_Metabolome"
 # load data
 input_path <- file.path(output_dir, "metab_microtable.RData")
+if(! file.exists(input_path)){
+	stop("Please first run the script in the step27!")
+}
 load(input_path)
 ######################################################
 set.seed(123)
@@ -34,7 +36,7 @@ y_response <- "Cropping"
 
 # create trans_classifier object
 t1 <- trans_classifier$new(dataset = tmp_microtable, y.response = y_response, x.predictors = taxa_level)
-# standardize data; "nzv" means removing features with near zero variance
+# standardize data; "nzv" means removing features with near zero variance; "center" subtracts the mean; "scale" divides by the standard deviation
 t1$cal_preProcess(method = c("center", "scale", "nzv"))
 
 # feature selection or add other customized or manual selected data into the object
@@ -133,9 +135,10 @@ cowplot::save_plot(file.path(output_dir, paste0("Classification_", y_response, "
 
 
 
+
+# select and save the important/informative features for the following analysis
 tmp_sel_features <- c(colnames(t1$data_feature), t2$res_feature_imp %>% .[.$MeanDecreaseAccuracy.pval < 0.01, ] %>% rownames)
 tmp_sel_features %<>% unique
-
 
 save(tmp_sel_features, file = file.path(output_dir, "Classification_rf_select_features.RData"))
 

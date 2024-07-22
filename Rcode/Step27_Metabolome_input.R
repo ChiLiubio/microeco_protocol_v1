@@ -1,3 +1,6 @@
+## 
+## Import metabolome data
+## 
 
 
 ######################################################
@@ -7,10 +10,19 @@ library(magrittr)
 library(readxl)
 ######################################################
 # create an output directory if it does not exist
-output_dir <- "Output/3.Metabolome/StageⅩ_Metabolome"
+output_dir <- "Output/3.Metabolome/Stage10_Metabolome"
 if(! dir.exists(output_dir)){
 	dir.create(output_dir, recursive = TRUE)
 }
+
+# use sample information table of amplicon sequencing data
+input_path <- "Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable.RData"
+# first check whether saved data path exists
+if(! file.exists(input_path)){
+	stop("Please first run the scripts in Stage2 !")
+}
+load(input_path)
+
 ######################################################
 
 file_path <- "./Input/3.Metabolome/Metabolome.xlsx"
@@ -29,15 +41,6 @@ tmp_feature[is.na(tmp_feature)] <- 0
 tmp_tax <- data.frame(class = rownames(tmp_feature))
 rownames(tmp_tax) <- tmp_tax[, 1]
 
-
-
-# use sample information table of amplicon sequencing data
-input_path <- "Output/1.Amplicon/StageⅡ_amplicon_microtable/amplicon_16S_microtable.RData"
-# first check whether saved data path exists
-if(! file.exists(input_path)){
-	stop("Please first run the scripts in StageⅡ !")
-}
-load(input_path)
 
 
 # use sample_table in 16S data

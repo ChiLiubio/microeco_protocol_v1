@@ -1,4 +1,6 @@
-
+## 
+## Import Bracken software results
+## 
 
 
 ######################################################
@@ -9,22 +11,24 @@ library(magrittr)
 library(readxl)
 ######################################################
 # create an output directory if it does not exist
-output_dir <- "Output/2.Metagenome/StageⅨ_Bracken"
+output_dir <- "Output/2.Metagenome/Stage9_Bracken"
 if(! dir.exists(output_dir)){
 	dir.create(output_dir, recursive = TRUE)
 }
+
+# use sample information table of amplicon sequencing data
+input_path <- "Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable.RData"
+# first check whether saved data path exists
+if(! file.exists(input_path)){
+	stop("Please first run the scripts in Stage2 !")
+}
+load(input_path)
+
 ######################################################
 
 file_path <- "./Input/2.Metagenome/Bracken/bracken_abundance_table.txt"
 match_table_path <- "./Input/2.Metagenome/match_table.xlsx"
 
-# use sample information table of amplicon sequencing data
-input_path <- "Output/1.Amplicon/StageⅡ_amplicon_microtable/amplicon_16S_microtable.RData"
-# first check whether saved data path exists
-if(! file.exists(input_path)){
-	stop("Please first run the scripts in StageⅡ !")
-}
-load(input_path)
 
 # generate microtable object
 # rel = FALSE: original abundances in taxa_abund list

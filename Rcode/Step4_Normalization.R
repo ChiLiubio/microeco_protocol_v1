@@ -1,3 +1,7 @@
+## 
+## Multiple normalization methods demonstration
+## 
+
 
 ###########################
 # load packages
@@ -5,25 +9,26 @@ library(microeco)
 library(magrittr)
 ###########################
 # output directory
-output_dir <- "./Output/1.Amplicon/StageⅡ_amplicon_microtable"
+output_dir <- "./Output/1.Amplicon/Stage2_amplicon_microtable"
 # load data
 input_path <- file.path(output_dir, "amplicon_16S_microtable.RData")
 # first check whether saved data path exists
 if(! file.exists(input_path)){
-	stop("Please first run Step3_Preprocess_microtable.R !")
+	stop("Please first run the script in the last step !")
 }
 load(input_path)
 ###########################
+# fix random seed for the reproducibility
 set.seed(123)
 
 tmp_microtable <- clone(amplicon_16S_microtable)
-# the minimum of sample sequences is over 20000
-tmp_microtable$sample_sums() %>% range
 
-# use trans_norm to do all the normalization
+# use trans_norm to perform all the normalization methods
 tmp <- trans_norm$new(dataset = tmp_microtable)
 
 # Rarefaction
+# the minimum of sample sequences is over 20000
+tmp_microtable$sample_sums() %>% range
 amplicon_16S_microtable_rarefy <- tmp$norm(method = "rarefy", sample.size = 20000)
 # save the microtable object to output directory
 save(amplicon_16S_microtable_rarefy, file = file.path(output_dir, "amplicon_16S_microtable_rarefy.RData"), compress = TRUE)

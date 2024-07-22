@@ -1,4 +1,6 @@
-
+## 
+## Classification at Genus level
+## 
 
 
 ######################################################
@@ -7,15 +9,15 @@ library(microeco)
 library(magrittr)
 ######################################################
 # create an output directory if it does not exist
-output_dir <- "Output/1.Amplicon/StageⅦ_Machine_learning"
+output_dir <- "Output/1.Amplicon/Stage7_Machine_learning"
 if(! dir.exists(output_dir)){
 	dir.create(output_dir, recursive = TRUE)
 }
 # load data
-input_path <- "Output/1.Amplicon/StageⅡ_amplicon_microtable/amplicon_16S_microtable.RData"
+input_path <- "Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable.RData"
 # first check whether saved data path exists
 if(! file.exists(input_path)){
-	stop("Please first run the scripts in StageⅡ !")
+	stop("Please first run the scripts in Stage2 !")
 }
 load(input_path)
 ######################################################

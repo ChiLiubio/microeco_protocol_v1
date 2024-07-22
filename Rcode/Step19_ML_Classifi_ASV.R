@@ -1,4 +1,6 @@
-
+## 
+## Classification at ASV level
+## 
 
 
 ######################################################
@@ -7,15 +9,15 @@ library(microeco)
 library(magrittr)
 ######################################################
 # create an output directory if it does not exist
-output_dir <- "Output/1.Amplicon/StageⅦ_Machine_learning"
+output_dir <- "Output/1.Amplicon/Stage7_Machine_learning"
 if(! dir.exists(output_dir)){
 	dir.create(output_dir, recursive = TRUE)
 }
-# load a normalized data
-input_path <- "Output/1.Amplicon/StageⅡ_amplicon_microtable/amplicon_16S_microtable_CLR.RData"
+# load a normalized microtable object
+input_path <- "Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable_CLR.RData"
 # first check whether saved data path exists
 if(! file.exists(input_path)){
-	stop("Please first run the scripts in StageⅡ !")
+	stop("Please first run the scripts in Stage2 !")
 }
 load(input_path)
 ######################################################
@@ -26,9 +28,9 @@ tmp_microtable <- clone(amplicon_16S_microtable_CLR)
 
 # filter low abundance
 tmp_microtable$filter_taxa(rel_abund = 0.0005)
-# add ASV to tax_table
+# add ASV to tax_table; as taxa_abund is calculateed based on the tax_table
 tmp_microtable$add_rownames2taxonomy(use_name = "ASV")
-# regenerate taxa_abund list with absolute abundance
+# regenerate taxa_abund list with original abundance (i.e., normalized data)
 tmp_microtable$cal_abund(rel = FALSE)
 
 

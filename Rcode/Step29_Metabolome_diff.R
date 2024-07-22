@@ -1,3 +1,6 @@
+## 
+## Differential test of metabolome data across groups
+## 
 
 
 ######################################################
@@ -6,22 +9,25 @@ library(microeco)
 library(magrittr)
 library(readxl)
 ######################################################
-# create an output directory if it does not exist
-output_dir <- "Output/3.Metabolome/StageⅩ_Metabolome"
-if(! dir.exists(output_dir)){
-	stop("Please first run the last step!")
-}
+output_dir <- "Output/3.Metabolome/Stage10_Metabolome"
 # load data
 input_path <- file.path(output_dir, "metab_microtable.RData")
+if(! file.exists(input_path)){
+	stop("Please first run the script in the step27!")
+}
 load(input_path)
-######################################################
-
-
-tmp_microtable <- clone(metab_microtable)
 
 # load the features selected in the last step
-load(file.path(output_dir, "Classification_rf_select_features.RData"))
+input_path <- file.path(output_dir, "Classification_rf_select_features.RData")
+if(! file.exists(input_path)){
+	stop("Please first run the script in the step28!")
+}
+load(input_path)
 
+######################################################
+
+tmp_microtable <- clone(metab_microtable)
+# filter features
 tmp_microtable$otu_table %<>% .[rownames(.) %in% tmp_sel_features, ]
 tmp_microtable$tidy_dataset()
 # regenerate the taxa_abund list for the differential test

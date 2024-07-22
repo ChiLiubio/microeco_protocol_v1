@@ -1,10 +1,27 @@
-
-
-#########################################################################################
+## 
 ## Correlation between alpha diversity and environmental variables
-#########################################################################################
+## 
 
-# select bulk soil
+
+###########################
+# load packages
+library(microeco)
+library(magrittr)
+###########################
+# create an output directory if it does not exist
+output_dir <- "./Output/1.Amplicon/Stage4_AlphaDiversity"
+
+# load data
+input_path <- file.path(output_dir, "amplicon_16S_microtable_rarefy_withalphadiv.RData")
+if(! file.exists(input_path)){
+	stop("Please first run the script in step7 !")
+}
+load(input_path)
+###########################
+
+
+
+# select samples from bulk soil
 tmp_microtable_bulksoil <- clone(tmp_microtable)
 tmp_microtable_bulksoil$sample_table %<>% .[.$Compartment == "Bulk soil", ]
 tmp_microtable_bulksoil$tidy_dataset()
@@ -13,9 +30,11 @@ tmp_microtable_bulksoil$tidy_dataset()
 # env_cols parameter to select the columns in sample_table of microtable object
 tmp <- trans_env$new(dataset = tmp_microtable_bulksoil, env_cols = 9:21)
 
+# calculate the correlation
 tmp$cal_cor(add_abund_table = tmp_microtable_bulksoil$alpha_diversity)
 write.csv(tmp$res_cor, file.path(output_dir, "AlphaDiv_Env_bulksoil_correlation.csv"))
 
+# visualization on all diversity indexes
 g1 <- tmp$plot_cor()
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Env_bulksoil_correlation.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
