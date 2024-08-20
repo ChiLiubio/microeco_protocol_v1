@@ -34,6 +34,7 @@ match_table_path <- "./Input/2.Metagenome/match_table.xlsx"
 file_path <- "./Input/2.Metagenome/HUMAnN3/Metacyc_pathabundance_joint_table.tsv"
 
 # generate microtable object
+# The parameters 'sample_table' and 'match_table' support either a file (e.g., csv, tsv or Excel) or a data.frame object in R.
 tmp_microtable <- humann2meco(file_path, db = "MetaCyc", match_table = match_table_path, sample_table = amplicon_16S_microtable$sample_table)
 # remove the pathways classified into "unclassified" class
 tmp_microtable$tax_table %<>% subset(Superclass1 != "unclassified")

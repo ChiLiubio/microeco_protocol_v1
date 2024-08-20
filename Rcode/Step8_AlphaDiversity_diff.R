@@ -23,8 +23,10 @@ load(input_path)
 # Compare two cropping treatments for each compartment
 measure <- "Shannon"
 
+# If the by_group parameter is not needed, please delete it
 tmp <- trans_alpha$new(dataset = tmp_microtable, group = "Cropping", by_group = "Compartment")
 tmp$cal_diff(method = "wilcox", measure = measure)
+# In the result, the P.adj column is the p value after adjustment with FDR method for method = "wilcox". To change the adjustment method, please use p_adjust_method parameter.
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_bycompart_wilcox.csv"))
 g1 <- tmp$plot_alpha(measure = measure)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Cropping_bycompart_wilcox_boxplot.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
@@ -43,17 +45,19 @@ g1 <- tmp$plot_alpha(measure = measure, y_increase = 0.05)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Fertilization_bycompart_wilcox_boxplot.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
 tmp$cal_diff(method = "anova", measure = measure)
+# The letters in the 'Letter' column are the result of post hoc test for one-way anova. To change the default 'duncan.test' method, please use anova_post_test parameter.
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Fertilization_bycompart_anova.csv"))
 g1 <- tmp$plot_alpha(measure = measure)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Fertilization_bycompart_anova_boxplot.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
 tmp$cal_diff(method = "KW_dunn", measure = measure, KW_dunn_letter = TRUE)
+# The file format is same with one-way ANOVA. The 'MonoLetter' column is for aligning letters to facilitate the viewing of results.
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Fertilization_bycompart_KW_dunn.csv"))
 g1 <- tmp$plot_alpha(measure = measure)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Fertilization_bycompart_KW_dunn_boxplot.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
 
-# two-way anova
+# two-way anova: Cropping + Fertilization + Cropping:Fertilization
 tmp <- trans_alpha$new(dataset = tmp_microtable, by_group = "Compartment")
 
 # for single measure
@@ -74,12 +78,27 @@ cowplot::save_plot(file.path(output_dir, "AlphaDiv_Cropping_Fertilization_bycomp
 
 tmp <- trans_alpha$new(dataset = tmp_microtable)
 tmp$cal_diff(method = "lme", formula = "Cropping+Fertilization+(1|Compartment)")
+# "Estimate" and "Std.Error" columns represent the fitted coefficient and its standard error, respectively.
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_Fertilization_lme.csv"))
 g1 <- tmp$plot_alpha()
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Cropping_Fertilization_lme.png"), g1, base_aspect_ratio = 1.3, dpi = 300, base_height = 7)
 
 
+
+# paired t-test or wilcox test
+
+measure <- "Shannon"
+# parameter by_ID is used to provide the identities of paired data
+tmp <- trans_alpha$new(dataset = tmp_microtable, group = "Cropping", by_group = "Compartment", by_ID = "Plant_ID")
+tmp$cal_diff(method = "wilcox", measure = measure)
+write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_bycompart_wilcox_paireddata.csv"))
+tmp$cal_diff(method = "t.test", measure = measure)
+write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_bycompart_ttest_paireddata.csv"))
+
+
+
 # linear regression for rhizosphere soil
+
 tmp_microtable_rhizo <- clone(tmp_microtable)
 tmp_microtable_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
 tmp_microtable_rhizo$tidy_dataset()
@@ -99,17 +118,6 @@ tmp$cal_diff(method = "anova")
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Group_Rhizo_anova.csv"))
 g1 <- tmp$plot_alpha(measure = measure, add_sig_text_size = 5)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Group_Rhizo_anova.png"), g1, base_aspect_ratio = 1.3, dpi = 300, base_height = 5)
-
-
-# paired t-test or wilcox test
-
-measure <- "Shannon"
-# parameter by_ID is used to provide the identities of paired data
-tmp <- trans_alpha$new(dataset = tmp_microtable, group = "Cropping", by_group = "Compartment", by_ID = "Plant_ID")
-tmp$cal_diff(method = "wilcox", measure = measure)
-write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_bycompart_wilcox_paireddata.csv"))
-tmp$cal_diff(method = "t.test", measure = measure)
-write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_bycompart_ttest_paireddata.csv"))
 
 
 

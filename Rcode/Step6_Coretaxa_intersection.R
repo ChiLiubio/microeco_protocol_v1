@@ -36,6 +36,7 @@ trans_vennobj <- trans_venn$new(tmp_merge, ratio = "numratio", name_joint = "-")
 # remove the elements with 0
 trans_vennobj$data_summary %<>% .[.$Counts != 0, ]
 # output data_summary to file
+# The "Count" column represents the feature number in each set; The "Abundance" column denotes the percentage that each part constitutes of the total.
 write.csv(trans_vennobj$data_summary, file.path(output_dir, "Coretaxa_intersection.csv"))
 
 # bar plot for intersections
@@ -46,6 +47,7 @@ cowplot::save_plot(file.path(output_dir, "Coretaxa_intersection.png"), g1, base_
 # transform intersection data to microtable object for other visualization
 trans_vennobj_mt <- trans_vennobj$trans_comm(use_frequency = TRUE)
 trans_vennobj_mt$cal_abund()
+# Each column represents the proportion of ASVs within a group that each genus accounts for relative to the total ASVs in that group.
 write.csv(trans_vennobj_mt$taxa_abund$Genus, file.path(output_dir, "Coretaxa_intersection_Genusratio.csv"))
 
 # Ordered elements in x-axis according to the number

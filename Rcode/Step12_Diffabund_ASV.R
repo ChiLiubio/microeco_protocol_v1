@@ -61,31 +61,38 @@ write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_single
 # ALDEx2_t
 method <- "ALDEx2_t"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel)
+# In result, 'wi.ep': expected p-value of the Wilcoxon Rank Sum test; 'wi.eBH': corresponding expected value of the Benjamini-Hochberg corrected p-value for each feature
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
 # ALDEx2_kw
 method <- "ALDEx2_kw"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel)
+# In result, 'kw.ep': expected p-value of the Kruskal-Wallis test for each feature; 'kw.eBH': corresponding expected value of the Benjamini-Hochberg corrected p-value for each feature
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
 # DESeq2
 method <- "DESeq2"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel)
+# lfcSE gives the standard error of the log2FoldChange; stat is the Wald statistic
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
 # edgeR
+# based on exactTest function of edgeR package
 method <- "edgeR"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel)
+# For results, logFC: log2-fold-change; logCPM: average log2-counts-per-million
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
 # ancombc2
 method <- "ancombc2"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel)
+# In the table; lfc: log fold changes; se: standard errors (SEs); W: test statistics
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
 # linda
 method <- "linda"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel)
+# In the table, log2FoldChange: bias-corrected coefficients; lfcSE: standard errors of the coefficients; stat: log2FoldChange / lfcSE
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
 # maaslin2
@@ -115,7 +122,6 @@ norm_obj$cal_abund(rel = FALSE)
 method <- "wilcox"
 tmp <- trans_diff$new(dataset = norm_obj, method = method, group = group, taxa_level = taxlevel)
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, "_Wrench.csv")))
-
 
 
 

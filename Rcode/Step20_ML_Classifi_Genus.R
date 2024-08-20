@@ -40,7 +40,6 @@ y_response <- "Cropping"
 t1 <- trans_classifier$new(dataset = tmp_microtable, y.response = y_response, x.predictors = taxa_level)
 # standardize data; "nzv" means removing features with near zero variance
 t1$cal_preProcess(method = c("center", "scale", "nzv"))
-write.csv(t1$data_feature, file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_preProcess_featuredata.csv")))
 
 # feature selection or add other customized or manual selected data into the object
 t1$cal_feature_sel(boruta.maxRuns = 300, boruta.pValue = 0.05)

@@ -62,7 +62,7 @@ tmp1 <- do.call(rbind, tmp) %>% t %>% as.data.frame
 # create microtable object
 tmp_mtobj <- microtable$new(otu_table = tmp1, tax_table = tmp_microtable_rhizo$tax_table)
 
-# use trans_venn class to analyze the features intersection
+# use trans_venn class to analyze the features intersections
 tmp_transvennobj <- trans_venn$new(tmp_mtobj, ratio = "numratio", name_joint = "-")
 # only show the elements with a relative large number
 tmp_transvennobj$data_summary %<>% .[.$Counts > 4, ]
@@ -76,9 +76,12 @@ cowplot::save_plot(file.path(output_dir, "diff_methods_singlefactor_threegroups_
 tmp_transvennobj_mt <- tmp_transvennobj$trans_comm(use_frequency = TRUE)
 tmp_transvennobj_mt$otu_table %<>% .[, colnames(.) %in% rownames(tmp_transvennobj$data_summary)]
 tmp_transvennobj_mt$tidy_dataset()
-# calculate the relative abundance, i.e. ratio
+# calculate the relative abundance, i.e. ratio here
 tmp_transvennobj_mt$cal_abund()
+# save the proportion data at Genus level to the directory
+write.csv(tmp_transvennobj_mt$taxa_abund$Genus, file.path(output_dir, "diff_methods_singlefactor_threegroups_venn_comp_Genus.csv"))
 
+# visualize the proportion data at Genus level
 library(tibble)
 tmp_x <- tmp_transvennobj$data_summary %>% rownames_to_column %>% .[order(.$Counts, decreasing = TRUE), ] %>% .$rowname
 

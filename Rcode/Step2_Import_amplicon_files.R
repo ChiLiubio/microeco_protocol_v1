@@ -1,14 +1,15 @@
+## Amplicon sequencing data analysis
 ## 
-## QIIME2-qza files to microtable object
+## Import QIIME2-qza format files to generate microtable object
 ## 
 
 
 ###################################################
 # load packages
-library(microeco)
-library(magrittr)
-library(file2meco)
-library(readxl)
+library(microeco) # data analysis
+library(file2meco) # for data import
+library(magrittr) # for pipe operators
+library(readxl) # import data from Excel spreadsheet
 ###################################################
 # create output directory if it does not exist
 output_dir <- "./Output/1.Amplicon/Stage2_amplicon_microtable"
@@ -21,7 +22,7 @@ if(! dir.exists(output_dir)){
 tmp <- "Input/1.Amplicon/QIIME2_qza"
 
 # use a temporary name (tmp_) for convenience
-# If phylogenetic tree or representative fasta is not available for user, please set: phylo_tree = NULL and rep_fasta = NULL
+# If phylogenetic tree or representative fasta is not available for users, please delete those parameters or set: phylo_tree = NULL and rep_fasta = NULL
 tmp_microtable <- qiime2meco(file.path(tmp, "feature_table_filter.qza"),
 	taxonomy_table = file.path(tmp, "taxonomy.qza"),
 	phylo_tree = file.path(tmp, "rooted_tree.qza"),
@@ -43,7 +44,7 @@ amplicon_16S_microtable_raw <- clone(tmp_microtable)
 
 # use save function to save the microtable object to output directory
 save(amplicon_16S_microtable_raw, file = file.path(output_dir, "amplicon_16S_microtable_raw.RData"), compress = TRUE)
-
+# The benefits of saving data as a local RData format are 1) backing up data to a local folder; 2) facilitating the quick reloading of data into R.
 
 
 

@@ -44,7 +44,7 @@ tmp_microtable$sample_table$Group %<>% factor(., levels = c("CC-CK", "RC-CK", "C
 # use clone function to copy the object completely
 amplicon_16S_microtable <- clone(tmp_microtable)
 
-# use save function to save the microtable object to output directory
+# save the microtable object to the output folder
 save(amplicon_16S_microtable, file = file.path(output_dir, "amplicon_16S_microtable.RData"), compress = TRUE)
 
 

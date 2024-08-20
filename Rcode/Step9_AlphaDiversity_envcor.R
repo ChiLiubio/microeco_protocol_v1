@@ -32,6 +32,7 @@ tmp <- trans_env$new(dataset = tmp_microtable_bulksoil, env_cols = 9:21)
 
 # calculate the correlation
 tmp$cal_cor(add_abund_table = tmp_microtable_bulksoil$alpha_diversity)
+# The 'AdjPvalue' column represents the p value after adjustment. The meaning of 'Significance' is "*: P < 0.05, **: P < 0.01; ***: P < 0.001".
 write.csv(tmp$res_cor, file.path(output_dir, "AlphaDiv_Env_bulksoil_correlation.csv"))
 
 # visualization on all diversity indexes

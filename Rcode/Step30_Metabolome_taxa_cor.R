@@ -106,8 +106,9 @@ tmp_rhizo$cal_network_attr()
 # node properties
 tmp_rhizo$get_node_table()
 write.csv(tmp_rhizo$res_node_table, file.path(output_dir, "network_rhizo_metabolites_genus_spearman_nodeproperties.csv"))
-# save network to gexf format file which can be opened by Gephi software directly
-tmp_rhizo$save_network(file.path(output_dir, "network_rhizo_metabolites_genus_spearman.gexf"))
+# edge properties
+tmp_rhizo$get_edge_table()
+write.csv(tmp_rhizo$res_edge_table, file.path(output_dir, "network_rhizo_metabolites_genus_spearman_edgeproperties.csv"))
 g1 <- tmp_rhizo$plot_network(method = "ggraph")
 cowplot::save_plot(file.path(output_dir, "network_rhizo_metabolites_genus_spearman_ggraph.png"), g1, base_aspect_ratio = 1.3, dpi = 300, base_height = 8)
 
@@ -131,12 +132,13 @@ tmp_bulk$cal_network_attr()
 # node properties
 tmp_bulk$get_node_table()
 write.csv(tmp_bulk$res_node_table, file.path(output_dir, "network_bulk_metabolites_genus_spearman_nodeproperties.csv"))
-# save network to gexf file
-tmp_bulk$save_network(file.path(output_dir, "network_bulk_metabolites_genus_spearman.gexf"))
+# edge properties
+tmp_bulk$get_edge_table()
+write.csv(tmp_bulk$res_edge_table, file.path(output_dir, "network_bulk_metabolites_genus_spearman_edgeproperties.csv"))
 g1 <- tmp_bulk$plot_network(method = "ggraph")
 cowplot::save_plot(file.path(output_dir, "network_bulk_metabolites_genus_spearman_ggraph.png"), g1, base_aspect_ratio = 1.3, dpi = 300, base_height = 8)
 
-
+# For more operations of network analysis with microeco package, please refer to a previous article https://doi.org/10.1002/imt2.71
 
 
 

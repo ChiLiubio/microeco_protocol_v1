@@ -18,7 +18,7 @@ if(! file.exists(input_path)){
 }
 load(input_path)
 ###########################
-# fix random seed for the reproducibility
+# fix random seed to ensure the reproducibility of the analysis
 set.seed(123)
 
 tmp_microtable <- clone(amplicon_16S_microtable)
@@ -30,7 +30,7 @@ tmp <- trans_norm$new(dataset = tmp_microtable)
 # the minimum of sample sequences is over 20000
 tmp_microtable$sample_sums() %>% range
 amplicon_16S_microtable_rarefy <- tmp$norm(method = "rarefy", sample.size = 20000)
-# save the microtable object to output directory
+# save each normalized microtable object to output directory
 save(amplicon_16S_microtable_rarefy, file = file.path(output_dir, "amplicon_16S_microtable_rarefy.RData"), compress = TRUE)
 
 # CLR: Centered log-ratio normalization <ISBN:978-0-412-28060-3> <doi: 10.3389/fmicb.2017.02224>

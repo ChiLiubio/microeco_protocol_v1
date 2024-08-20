@@ -38,21 +38,25 @@ tmp_microtable_rarefy_rhizo$cal_betadiv(method = measure)
 
 # dbRDA: distance-based RDA
 method <- "dbRDA"
-# standardize variables: standardize = TRUE
+# standardize = TRUE: standardize variables
 t1 <- trans_env$new(dataset = tmp_microtable_rarefy_rhizo, env_cols = 7:19, standardize = TRUE)
 t1$cal_ordination(method = method, use_measure = "bray")
 # get the significance of the terms
 t1$cal_ordination_anova()
 # fit factors onto the ordination to get R2 for each factor
 t1$cal_ordination_envfit()
-# save statistical results to local file
+# save the R2 of model to the directory
 capture.output(t1$res_ordination_R2, file = file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_rawoutput.txt"))
+# save fitted R2 and significance of each factor to the directory
 capture.output(t1$res_ordination_envfit, file = file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_rawoutput.txt"), append = TRUE)
+# save the significances of factors in the model to the directory
 write.csv(t1$res_ordination_terms, file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_termssig.csv"))
+# save the significances of axes in the model to the directory
 write.csv(t1$res_ordination_axis, file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_axissig.csv"))
 
 # transform raw results for visualization
 t1$trans_ordination(adjust_arrow_length = TRUE, min_perc_env = 0.2, max_perc_env = 1)
+# save the transformed data of scores and arrows to the directory
 write.csv(t1$res_ordination_trans$df_sites, file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_trans_sample.csv"))
 write.csv(t1$res_ordination_trans$df_arrows, file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_trans_arrow.csv"))
 
@@ -117,11 +121,15 @@ cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_CCA_Genus.png"), 
 
 t1 <- trans_env$new(dataset = tmp_microtable_rarefy_rhizo, env_cols = 7:19, standardize = TRUE)
 t1$cal_mantel(use_measure = "bray")
+# save the results to the directory; 'p.adjusted' column: p value adjustment. The meaning of 'Significance' is "*: P < 0.05, **: P < 0.01; ***: P < 0.001".
 write.csv(t1$res_mantel, file.path(output_dir, "BetaDiv_mantel_rhizo_bray.csv"))
+# partial mantel test
 t1$cal_mantel(partial_mantel = TRUE, use_measure = "bray")
 write.csv(t1$res_mantel, file.path(output_dir, "BetaDiv_mantel_rhizo_bray_partial.csv"))
+# mantel test for different groups
 t1$cal_mantel(by_group = "Cropping", use_measure = "bray")
 write.csv(t1$res_mantel, file.path(output_dir, "BetaDiv_mantel_rhizo_bray_byCropping.csv"))
+# partial mantel test for different groups
 t1$cal_mantel(by_group = "Cropping", partial_mantel = TRUE, use_measure = "bray")
 write.csv(t1$res_mantel, file.path(output_dir, "BetaDiv_mantel_rhizo_bray_byCropping_partial.csv"))
 

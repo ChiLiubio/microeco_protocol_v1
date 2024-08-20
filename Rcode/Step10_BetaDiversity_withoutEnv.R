@@ -43,7 +43,9 @@ measure <- "bray"
 tmp_microtable_rarefy_rhizo$cal_betadiv(method = measure, unifrac = TRUE)
 # save the Bray-Curtis dissimilarity matrix
 write.csv(tmp_microtable_rarefy_rhizo$beta_diversity[[measure]], file.path(output_dir, "BetaDiv_rarefy_rhizo_bray.csv"))
+# save the weighted UniFrac dissimilarity matrix
 write.csv(tmp_microtable_rarefy_rhizo$beta_diversity$wei_unifrac, file.path(output_dir, "BetaDiv_rarefy_rhizo_weightedUniFrac.csv"))
+# save the unweighted UniFrac dissimilarity matrix
 write.csv(tmp_microtable_rarefy_rhizo$beta_diversity$unwei_unifrac, file.path(output_dir, "BetaDiv_rarefy_rhizo_unweightedUniFrac.csv"))
 
 # calculate Aitchison dissimilarity for non-rarefied rhizosphere data
@@ -57,6 +59,7 @@ write.csv(tmp_microtable_rhizo$beta_diversity[[measure]], file.path(output_dir, 
 measure <- "bray"
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo, group = "Group", measure = measure)
 t1$cal_ordination(method = "PCoA", ncomp = 2)
+# 'PCo1' column means the score of first coordinate axis; 'PCo2' column represents the score of second coordinate axis; Other columns are the metadata
 write.csv(t1$res_ordination$scores, file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCoA_Bray_Score.csv"))
 # visualization
 g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Group", plot_type = c("point", "ellipse"))
@@ -76,6 +79,7 @@ cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_nonrarefy_PCoA_Aitchison
 measure <- "bray"
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo, group = "Group", measure = measure)
 t1$cal_ordination(method = "NMDS")
+# 'MDS1' column means the score of first coordinate axis; 'MDS2' column represents the score of second coordinate axis; Other columns are the metadata
 write.csv(t1$res_ordination$scores, file.path(output_dir, "BetaDiv_Rhizo_rarefy_NMDS_Bray_Score.csv"))
 
 g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Group", plot_type = c("point", "ellipse"), NMDS_stress_pos = c(1.1, 1.4), NMDS_stress_text_prefix = "Stress: ")
@@ -106,6 +110,7 @@ rownames(tmp_microtable_rarefy_rhizo_genus$tax_table) <- rownames(tmp_microtable
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo_genus)
 t1$cal_ordination(method = "PCA", scale_species = TRUE, scale_species_ratio = 1)
 write.csv(t1$res_ordination$scores, file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCA_Genus_Score.csv"))
+# Columns PC1-PC3 represent the loadings in each axis. 'dist' is sum of squares for loadings of PC1 and PC2 and used to order the features.
 write.csv(t1$res_ordination$loading, file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCA_Genus_Loading.csv"))
 
 g1 <- t1$plot_ordination(plot_color = "Group", loading_arrow = TRUE)
@@ -114,7 +119,7 @@ cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCA_Genus.png"), 
 
 # DCA
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo_genus)
-t1$cal_ordination(method = "DCA")
+t1$cal_ordination(method = "DCA", scale_species = TRUE)
 write.csv(t1$res_ordination$scores, file.path(output_dir, "BetaDiv_Rhizo_rarefy_DCA_Genus_Score.csv"))
 write.csv(t1$res_ordination$loading, file.path(output_dir, "BetaDiv_Rhizo_rarefy_DCA_Genus_Loading.csv"))
 
@@ -129,7 +134,11 @@ t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo, group = "Cropping", 
 t1$cal_group_distance(within_group = TRUE, by_group = "Fertilization")
 # manipulate res_group_distance to remove the distances between same group
 t1$res_group_distance %<>% .[!.$Fertilization %in% c("CK vs CK", "NPK vs NPK", "NPKS vs NPKS"), ]
+# save the converted distance values (long-format table) to local directory
+write.csv(t1$res_group_distance, file.path(output_dir, "BetaDiv_Rhizo_rarefy_bray_Cropping_within.csv"))
 t1$cal_group_distance_diff(method = "wilcox")
+# save the differential test results to directory
+write.csv(t1$res_group_distance_diff, file.path(output_dir, "BetaDiv_Rhizo_rarefy_bray_Cropping_within_diff.csv"))
 g1 <- t1$plot_group_distance()
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_bray_Cropping_within_boxplot.png"), g1, base_aspect_ratio = 1.25, dpi = 300, base_height = 6)
 

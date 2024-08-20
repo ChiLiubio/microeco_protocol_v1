@@ -7,35 +7,48 @@ install.packages("microeco")
 install.packages("BiocManager")
 install.packages("file2meco", repos = BiocManager::repositories())
 
-# generate some combined graph
+# invoke some visualization functions
+install.packages("ggpubr")
+
+# arrange and align several plots on one page
 install.packages("aplot")
 
 # multiple facets in barplot
 install.packages("ggh4x")
 
-# save plot to local file
-install.packages("cowplot")
+# UniFrac distance
+install.packages("GUniFrac")
 
-# statistics
+# for some statistics
 install.packages("agricolae")
 
 # generate significant letters
 install.packages("FSA")
 install.packages("rcompanion")
 
-# evaluate R2 in mixed model
+# evaluate R2 in mixed-effects model
 install.packages("performance")
 
+# visualize correlation network of metabolomic data in R
+install.packages("ggraph")
 
 # machine learning
+## feature selection
 install.packages("Boruta")
+## split samples
 install.packages("rsample")
+# random forest model
 install.packages("randomForest")
-install.packages("rfPermute")
-install.packages("multiROC")
+# Support Vector Machine model
 install.packages("kernlab")
+# eXtreme Gradient Boosting model
+install.packages("xgboost")
+# determine significance of features in random forest model
+install.packages("rfPermute")
+# ROC curve analysis
+install.packages("multiROC")
+# for the analysis of multiple models
 install.packages("caretEnsemble")
-
 
 
 # differential test methods
@@ -54,20 +67,57 @@ BiocManager::install("phyloseq")
 BiocManager::install("ggtree")
 
 
-# generate simulated community data
-# not available for Bioconductor version '3.19'
-BiocManager::install("SparseDOSSA2")
-
+# use SparseDOSSA2 package to simulate community data
+# It is not available for Bioconductor version '3.19'
+# Install the package from source in GitHub https://github.com/biobakery/SparseDOSSA2
+# first install some dependent packages
+install.packages("ks")
+install.packages("huge")
+install.packages("future.apply")
+install.packages("truncnorm")
+install.packages("Rmpfr")
+install.packages("extdata/SparseDOSSA2_0.99.2.tar.gz", type = "source")
 
 
 
 ######################################################################
 ######################################################################
-# Trouble shooting for package downloading: The internet speed is too slow, or repository connection fails due to the firewall
-# please find a mirror name in https://cran.r-project.org/mirrors.html
-mirror = "https://mirrors.tuna.tsinghua.edu.cn"
-options("repos" = c(CRAN = paste0(mirror, "/CRAN/")))
-options(BioC_mirror = paste0(mirror, "/bioconductor/"))
-######################################################################
-######################################################################
+# Test whether each package has been correctly installed
+library(microeco)
+if(packageVersion("microeco") < '1.9.0'){stop("The minimum version of microeco package should be 1.9.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
+library(file2meco)
+library(aplot)
+library(ggh4x)
+library(cowplot)
+library(agricolae)
+library(FSA)
+library(rcompanion)
+library(performance)
+library(Boruta)
+library(rsample)
+library(randomForest)
+library(rfPermute)
+library(multiROC)
+library(kernlab)
+library(xgboost)
+library(caretEnsemble)
+library(MicrobiomeStat)
+library(metagenomeSeq)
+library(ALDEx2)
+library(ANCOMBC)
+library(edgeR)
+library(DESeq2)
+library(Maaslin2)
+library(phyloseq)
+library(ggtree)
+library(SparseDOSSA2)
+
+
+
+
+
+
+
+
+
 

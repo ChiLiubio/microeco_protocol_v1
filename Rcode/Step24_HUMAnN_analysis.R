@@ -54,6 +54,7 @@ cowplot::save_plot(file.path(output_dir, "MetaCyc_barplot_Superclass1_Phylum.png
 # select all the three pathway levels; calculate relative abundance
 tmp_microtable$cal_abund(select_cols = 1:3, rel = TRUE)
 tmp <- trans_diff$new(tmp_microtable, method = "lefse", group = "Fertilization")
+# The format of result is same with that in amplicon sequencing data part
 write.csv(tmp$res_diff, file.path(output_dir, "MetaCyc_lefse_pathway_Fertilization.csv"))
 g1 <- tmp$plot_diff_bar(use_number = 1:20)
 cowplot::save_plot(file.path(output_dir, "MetaCyc_lefse_Pathway_Fertilization.png"), g1, base_aspect_ratio = 1.3, dpi = 300, base_height = 6)
@@ -89,6 +90,9 @@ rownames(tmp_microtable_pathway$tax_table) <- rownames(tmp_microtable_pathway$ot
 # perform PCA
 t1 <- trans_beta$new(dataset = tmp_microtable_pathway)
 t1$cal_ordination(method = "PCA", scale_species = TRUE, scale_species_ratio = 1)
+write.csv(t1$res_ordination$scores, file.path(output_dir, "MetaCyc_PCA_pathway_Score.csv"))
+# Columns PC1-PC3 represent the loadings in each axis. 'dist' is sum of squares for loadings of PC1 and PC2 and used to order the features.
+write.csv(t1$res_ordination$loading, file.path(output_dir, "MetaCyc_PCA_pathway_Loading.csv"))
 g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Compartment", loading_arrow = TRUE, loading_text_italic = FALSE)
 cowplot::save_plot(file.path(output_dir, "MetaCyc_PCA_pathway.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 

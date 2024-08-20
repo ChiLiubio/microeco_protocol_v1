@@ -50,9 +50,10 @@ R$filter_taxa(rel_abund = abund, freq = freq)
 
 # merge the core ASV names into a data.frame object and save it into a file
 res <- rbind(data.frame(compartment = "S", ASV = S$taxa_names()), data.frame(compartment = "RS", ASV = RS$taxa_names()), data.frame(compartment = "R", ASV = R$taxa_names()))
+# write the data.frame object containing core ASV names in each compartment to the output directory
 write.csv(res, file.path(output_dir, "Coretaxa_calc_compartments.csv"))
 
-
+# also save each microtable object to directory
 save(S, file = file.path(output_dir, "Coretaxa_Bulk.RData"), compress = TRUE)
 save(RS, file = file.path(output_dir, "Coretaxa_Rhizosphere.RData"), compress = TRUE)
 save(R, file = file.path(output_dir, "Coretaxa_Endophyte.RData"), compress = TRUE)
