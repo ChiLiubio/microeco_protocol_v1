@@ -1,5 +1,5 @@
 ## 
-## use trans_venn class to analyze the intersection of core taxa in different compartments
+## use trans_venn class to analyze the shared and unique core ASVs among compartments
 ## 
 
 

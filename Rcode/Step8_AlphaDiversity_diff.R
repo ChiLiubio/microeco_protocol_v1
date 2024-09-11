@@ -57,6 +57,8 @@ g1 <- tmp$plot_alpha(measure = measure)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Fertilization_bycompart_KW_dunn_boxplot.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
 
+
+
 # two-way anova: Cropping + Fertilization + Cropping:Fertilization
 tmp <- trans_alpha$new(dataset = tmp_microtable, by_group = "Compartment")
 
@@ -85,7 +87,7 @@ cowplot::save_plot(file.path(output_dir, "AlphaDiv_Cropping_Fertilization_lme.pn
 
 
 
-# paired t-test or wilcox test
+# paired t-test or paired Wilcoxon test
 
 measure <- "Shannon"
 # parameter by_ID is used to provide the identities of paired data
@@ -96,28 +98,41 @@ tmp$cal_diff(method = "t.test", measure = measure)
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_bycompart_ttest_paireddata.csv"))
 
 
-
-# linear regression for rhizosphere soil
+#####################################
+# select one compartment: rhizosphere soil
 
 tmp_microtable_rhizo <- clone(tmp_microtable)
 tmp_microtable_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
 tmp_microtable_rhizo$tidy_dataset()
 
+# linear regression for rhizosphere soil
 tmp <- trans_alpha$new(dataset = tmp_microtable_rhizo)
 tmp$cal_diff(method = "lm", formula = "Cropping+Fertilization")
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_Fertilization_lm_Rhizo.csv"))
 g1 <- tmp$plot_alpha(heatmap_cell = "Estimate", heatmap_lab_fill = "Coef")
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Cropping_Fertilization_lm_Rhizo.png"), g1, base_aspect_ratio = 1, dpi = 300, base_height = 7)
 
-
 # one-way anova for rhizosphere soil
-
 measure <- "Shannon"
 tmp <- trans_alpha$new(dataset = tmp_microtable_rhizo, group = "Group")
 tmp$cal_diff(method = "anova")
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Group_Rhizo_anova.csv"))
 g1 <- tmp$plot_alpha(measure = measure, add_sig_text_size = 5)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Group_Rhizo_anova.png"), g1, base_aspect_ratio = 1.3, dpi = 300, base_height = 5)
+
+# Kruskal-Wallis test with Dunn's multiple comparisons; rhizosphere soil
+tmp <- trans_alpha$new(dataset = tmp_microtable_rhizo, group = "Fertilization")
+tmp$cal_diff(method = "KW_dunn", KW_dunn_letter = TRUE)
+write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Fertilization_KW_dunn_Rhizo.csv"))
+g1 <- tmp$plot_alpha(plot_type = "ggdotplot", fill = "Fertilization", alpha = 0.3, size = 2, y_increase = 0.4, add = "mean_se", xtext_angle = 0, add_sig_text_size = 5)
+cowplot::save_plot(file.path(output_dir, "AlphaDiv_Fertilization_KW_dunn_Rhizo.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
+
+# Wilcoxon test for fertilization treatments in each cropping treatment group; rhizosphere soil
+tmp <- trans_alpha$new(dataset = tmp_microtable_rhizo, group = "Fertilization", by_group = "Cropping")
+tmp$cal_diff(method = "wilcox")
+write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Fertilization_byCropping_wilcox_Rhizo.csv"))
+g1 <- tmp$plot_alpha(plot_type = "ggviolin", fill = "Fertilization", alpha = 0.3, y_start = 0.3, y_increase = 0.15, add = "mean_se", xtext_angle = 0)
+cowplot::save_plot(file.path(output_dir, "AlphaDiv_Fertilization_byCropping_wilcox_Rhizo.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
 
 

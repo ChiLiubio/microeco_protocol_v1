@@ -8,6 +8,8 @@
 library(microeco)
 library(magrittr)
 library(readxl)
+library(ggplot2)
+theme_set(theme_bw())
 ######################################################
 output_dir <- "Output/3.Metabolome/Stage10_Metabolome"
 # load data
@@ -141,6 +143,35 @@ tmp_sel_features <- c(colnames(t1$data_feature), t2$res_feature_imp %>% .[.$Mean
 tmp_sel_features %<>% unique
 
 save(tmp_sel_features, file = file.path(output_dir, "Classification_rf_select_features.RData"))
+
+
+
+
+# PLS-DA for rhizosphere soil
+
+tmp_microtable_rhizo <- clone(tmp_microtable)
+tmp_microtable_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
+tmp_microtable_rhizo$tidy_dataset()
+
+t1 <- trans_beta$new(dataset = tmp_microtable_rhizo, group = "Group")
+t1$cal_ordination(method = "PLS-DA", scale_species = TRUE)
+t1$plot_ordination(plot_color = "Group")
+g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Group", plot_type = c("point", "ellipse"), loading_arrow = FALSE) +
+	theme(panel.grid=element_blank()) +
+	geom_vline(xintercept = 0, linetype = "dashed", color = "grey80") +
+	geom_hline(yintercept = 0, linetype = "dashed", color = "grey80")
+
+cowplot::save_plot(file.path(output_dir, "Classification_PLSDA_Rhizo.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
+imp <- as.data.frame(sort(t1$res_ordination$model@vipVn, decreasing = TRUE))
+# Variable Importance
+colnames(imp)[1] <- "Importance"
+write.csv(imp, file.path(output_dir, "Classification_PLSDA_Rhizo_vip.csv"))
+
+
+
+
+
+
 
 
 

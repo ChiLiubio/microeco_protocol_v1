@@ -135,9 +135,18 @@ write.csv(t1$res_mantel, file.path(output_dir, "BetaDiv_mantel_rhizo_bray_byCrop
 
 
 
+#########################################
+# correlation
+t1 <- trans_env$new(dataset = tmp_microtable_rarefy_rhizo, env_cols = 7:19, standardize = TRUE)
 
+g1 <- t1$plot_scatterfit(
+    x = tmp_microtable_rarefy_rhizo$beta_diversity$bray[rownames(t1$data_env), rownames(t1$data_env)], y = "pH",
+	type = "cor", group = "Cropping", group_order = c("CC", "RC"),
+	point_size = 3, point_alpha = 0.6, line_se = TRUE, line_size = 1.5, shape_values = c(16, 17),
+    y_axis_title = "Euclidean distance of pH", x_axis_title = "Bray-Curtis distance", size = 5
+)
 
-
+cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_scatterfit_pH_Bray.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
 
 

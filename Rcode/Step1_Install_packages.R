@@ -68,7 +68,7 @@ BiocManager::install("ggtree")
 
 
 # use SparseDOSSA2 package to simulate community data
-# It is not available for Bioconductor version '3.19'
+# It is not available for Bioconductor version '3.19' when run: BiocManager::install("SparseDOSSA2")
 # Install the package from source in GitHub https://github.com/biobakery/SparseDOSSA2
 # first install some dependent packages
 install.packages("ks")
