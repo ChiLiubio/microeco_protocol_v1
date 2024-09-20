@@ -66,6 +66,8 @@ BiocManager::install("phyloseq")
 # some tree-like plot 
 BiocManager::install("ggtree")
 
+# PLS-DA
+BiocManager::install("ropls")
 
 # use SparseDOSSA2 package to simulate community data
 # It is not available for Bioconductor version '3.19' when run: BiocManager::install("SparseDOSSA2")
@@ -84,8 +86,9 @@ install.packages("extdata/SparseDOSSA2_0.99.2.tar.gz", type = "source")
 ######################################################################
 # Test whether each package has been correctly installed
 library(microeco)
-if(packageVersion("microeco") < '1.9.0'){stop("The minimum version of microeco package should be 1.9.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
+if(packageVersion("microeco") < '1.9.0'){stop("Minimum version of microeco package should be 1.9.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
 library(file2meco)
+if(packageVersion("file2meco") < '0.8.0'){stop("Minimum version of file2meco package should be 0.8.0! Current version is ", packageVersion("file2meco"), " ! Please reinstall it!")}
 library(aplot)
 library(ggh4x)
 library(cowplot)
