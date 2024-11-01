@@ -1,5 +1,5 @@
 
-# A comprehensive protocol for microeco version 1.0
+# A comprehensive protocol for statistical analysis and visualization of microbiome omics data with R microeco and file2meco packages
 
 
 
