@@ -48,6 +48,11 @@ write.csv(tmp_microtable_rarefy_rhizo$beta_diversity$wei_unifrac, file.path(outp
 # save the unweighted UniFrac dissimilarity matrix
 write.csv(tmp_microtable_rarefy_rhizo$beta_diversity$unwei_unifrac, file.path(output_dir, "BetaDiv_rarefy_rhizo_unweightedUniFrac.csv"))
 
+# Jaccard distance for binary presence/absence data
+measure <- "jaccard"
+tmp_microtable_rarefy_rhizo$cal_betadiv(method = measure)
+write.csv(tmp_microtable_rarefy_rhizo$beta_diversity[[measure]], file.path(output_dir, "BetaDiv_rarefy_rhizo_jaccard_binary.csv"))
+
 # calculate Aitchison dissimilarity for non-rarefied rhizosphere data
 measure <- "aitchison"
 tmp_microtable_rhizo$cal_betadiv(method = measure)
@@ -57,11 +62,13 @@ write.csv(tmp_microtable_rhizo$beta_diversity[[measure]], file.path(output_dir, 
 ###########################
 # PCoA based on Bray-Curtis distance with rarefied data
 measure <- "bray"
+tmp_microtable_rarefy_rhizo$cal_betadiv(method = measure)
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo, group = "Group", measure = measure)
 t1$cal_ordination(method = "PCoA", ncomp = 2)
 # 'PCo1' column means the score of first coordinate axis; 'PCo2' column represents the score of second coordinate axis; Other columns are the metadata
 write.csv(t1$res_ordination$scores, file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCoA_Bray_Score.csv"))
 # visualization
+# Figure 3a
 g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Group", plot_type = c("point", "ellipse"))
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCoA_Bray.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
@@ -70,7 +77,7 @@ measure <- "aitchison"
 t2 <- trans_beta$new(dataset = tmp_microtable_rhizo, group = "Group", measure = measure)
 t2$cal_ordination(method = "PCoA", ncomp = 2)
 write.csv(t2$res_ordination$scores, file.path(output_dir, "BetaDiv_Rhizo_nonrarefy_PCoA_Aitchison_Score.csv"))
-
+# Figure 3b
 g2 <- t2$plot_ordination(plot_color = "Group", plot_shape = "Group", plot_type = c("point", "ellipse"))
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_nonrarefy_PCoA_Aitchison.png"), g2, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
@@ -108,6 +115,9 @@ rownames(tmp_microtable_rarefy_rhizo_genus$tax_table) <- rownames(tmp_microtable
 
 
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo_genus)
+# with square root transformation
+t1$cal_ordination(method = "PCA", trans = TRUE, scale_species = TRUE, scale_species_ratio = 1)
+# without square root transformation; species loading is scaled
 t1$cal_ordination(method = "PCA", scale_species = TRUE, scale_species_ratio = 1)
 write.csv(t1$res_ordination$scores, file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCA_Genus_Score.csv"))
 # Columns PC1-PC3 represent the loadings in each axis. 'dist' is sum of squares for loadings of PC1 and PC2 and used to order the features.
@@ -155,6 +165,12 @@ t1$cal_group_distance(within_group = FALSE, by_group = "Cropping")
 t1$cal_group_distance_diff(method = "anova")
 g1 <- t1$plot_group_distance()
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_bray_Fertilization_between_boxplot.png"), g1, base_aspect_ratio = 1.25, dpi = 300, base_height = 6)
+#	for each cropping treatment
+t1$cal_group_distance_diff(method = "anova", by_group = "Cropping")
+# Figure 3c
+g1 <- t1$plot_group_distance(xtext_angle = 0, add = "jitter") + theme(legend.title = element_blank(), legend.text = element_text(size = 12))
+cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_bray_Fertilization_between_boxplot_byCropping.png"), g1, base_aspect_ratio = 1.25, dpi = 300, base_height = 6)
+
 
 
 # one-way perMANOVA for all groups

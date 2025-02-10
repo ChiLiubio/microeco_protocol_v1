@@ -61,9 +61,11 @@ save(amplicon_16S_microtable_RLE, file = file.path(output_dir, "amplicon_16S_mic
 amplicon_16S_microtable_TSS <- tmp$norm(method = "TSS")
 save(amplicon_16S_microtable_TSS, file = file.path(output_dir, "amplicon_16S_microtable_TSS.RData"), compress = TRUE)
 
-
-
-
+# DESeq2: Median ratio of counts relative to geometric mean per feature based on the DESeq function of DESeq2 package <doi: 10.1186/s13059-014-0550-8>
+# Either group or formula parameter should be provided
+formula <- "Compartment+Cropping+Fertilization"
+amplicon_16S_microtable_DESeq2 <- tmp$norm(method = "DESeq2", group = formula)
+save(amplicon_16S_microtable_DESeq2, file = file.path(output_dir, "amplicon_16S_microtable_DESeq2.RData"), compress = TRUE)
 
 
 

@@ -64,6 +64,7 @@ p2 <- res_table %>%
 p2 <- ggpar(p2, legend = "none", x.text.angle = 30) + tmp_theme
 
 # merge two plots into one
+# Figure 4c and 4d
 g1 <- ggarrange(p1, p2, ncol = 1)
 cowplot::save_plot(file.path(output_dir, "diff_methods_simulation_powerfdr.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 8)
 

@@ -68,6 +68,8 @@ tmp_transenv <- trans_env$new(dataset = tmp_amplicon_microtable_rhizo, add_data 
 tmp_transenv$cal_cor(cor_method = "spearman", use_data = "other", p_adjust_method = "fdr", other_taxa = select_taxa)
 write.csv(tmp_transenv$res_cor, file.path(output_dir, "Metabolome_Genera_cor_spearman_Rhizosphere.csv"))
 
+# Figure 7e
+tmp_transenv$res_cor$Taxa %<>% gsub(".*g__", "", .)
 g1 <- tmp_transenv$plot_cor(cluster_ggplot = "both", cluster_height_rows = 0.3, cluster_height_cols = 0.15)
 cowplot::save_plot(file.path(output_dir, "Metabolome_Genera_cor_spearman_Rhizosphere.png"), g1, base_aspect_ratio = 1.6, dpi = 300, base_height = 7)
 
@@ -81,11 +83,15 @@ tmp_transenv <- trans_env$new(dataset = tmp_amplicon_microtable_bulk, add_data =
 tmp_transenv$cal_cor(cor_method = "spearman", use_data = "other", p_adjust_method = "fdr", other_taxa = select_taxa)
 write.csv(tmp_transenv$res_cor, file.path(output_dir, "Metabolome_Genera_cor_spearman_Bulk.csv"))
 
+# Figure 7f
+tmp_transenv$res_cor$Taxa %<>% gsub(".*g__", "", .)
 g1 <- tmp_transenv$plot_cor(cluster_ggplot = "both", cluster_height_rows = 0.3, cluster_height_cols = 0.15)
 cowplot::save_plot(file.path(output_dir, "Metabolome_Genera_cor_spearman_Bulk.png"), g1, base_aspect_ratio = 1.6, dpi = 300, base_height = 7)
 
 
-#########################################
+
+##################################################################################
+##################################################################################
 # correlation network
 
 # rhizosphere

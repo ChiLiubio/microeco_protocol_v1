@@ -33,6 +33,7 @@ freq <- 0.5
 abund <- 0.0005
 
 # select core taxa for each compartment
+# If users need to use other column names in their own data, they can simply replace 'Compartment' with the other column names and 'Bulk soil' with the group information within it.
 S <- clone(tmp_microtable)
 S$sample_table %<>% .[.$Compartment != "Bulk soil", ]
 S$tidy_dataset()
@@ -52,6 +53,9 @@ R$filter_taxa(rel_abund = abund, freq = freq)
 res <- rbind(data.frame(compartment = "S", ASV = S$taxa_names()), data.frame(compartment = "RS", ASV = RS$taxa_names()), data.frame(compartment = "R", ASV = R$taxa_names()))
 # write the data.frame object containing core ASV names in each compartment to the output directory
 write.csv(res, file.path(output_dir, "Coretaxa_calc_compartments.csv"))
+# Description of the result file: 
+#	The "compartment" column represents the different compartments, and the "ASV" column contains the names of the core ASVs identified in each compartment.
+
 
 # also save each microtable object to directory
 save(S, file = file.path(output_dir, "Coretaxa_Bulk.RData"), compress = TRUE)

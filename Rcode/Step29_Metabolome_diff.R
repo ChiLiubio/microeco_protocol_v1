@@ -36,7 +36,7 @@ tmp_microtable$cal_abund(rel = FALSE)
 
 
 # Linear regression using log-transformed data
-t1 <- trans_diff$new(dataset = tmp_microtable, method = "lm", formula = "Compartment + Cropping + Fertilization", taxa_level = "class", transformation = "log")
+t1 <- trans_diff$new(dataset = tmp_microtable, method = "lm", formula = "Compartment + Cropping + Fertilization", taxa_level = "class", filter_thres = 0, transformation = "log")
 
 write.csv(t1$res_diff, file.path(output_dir, "Metabolome_diff_lm_log.csv"))
 
@@ -50,11 +50,12 @@ tmp_table$Factors %<>% gsub("CroppingRC", "Cropping: RC", .)
 
 
 t1$res_diff <- tmp_table
-g1 <- t1$plot_diff_bar(filter_feature = c("ns", "", "*"), heatmap_cell = "Estimate", heatmap_lab_fill = "Estimate", cluster_ggplot = "both")
-cowplot::save_plot(file.path(output_dir, "Metabolome_diff_lm_log_filter_nonextremesig.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 8)
-
+# Figure 7d
 g1 <- t1$plot_diff_bar(heatmap_cell = "Estimate", heatmap_lab_fill = "Estimate", cluster_ggplot = "both")
 cowplot::save_plot(file.path(output_dir, "Metabolome_diff_lm_log.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 8)
+# filter_feature parameter can be used to filter the features without significance
+g1 <- t1$plot_diff_bar(filter_feature = c("ns", "", "*"), heatmap_cell = "Estimate", heatmap_lab_fill = "Estimate", cluster_ggplot = "both")
+cowplot::save_plot(file.path(output_dir, "Metabolome_diff_lm_log_extremesig.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 8)
 
 
 ###########################################################

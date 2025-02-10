@@ -21,6 +21,10 @@ if(! file.exists(input_path)){
 }
 load(input_path)
 
+
+tmp_microtable <- clone(amplicon_16S_microtable)
+tmp_microtable$cal_abund(rel = TRUE)
+
 # select data for rhizosphere soil
 tmp_microtable_rhizo <- clone(amplicon_16S_microtable)
 tmp_microtable_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
@@ -74,11 +78,12 @@ g1 <- tmp$plot_diff_abund(add_sig = TRUE)
 cowplot::save_plot(file.path(output_dir, "Diff_abund_test_Genus_singlefactor_KWdunn_abundsig.png"), g1, base_aspect_ratio = 1.3, dpi = 300, base_height = 7)
 
 
-# Beta regression
-method <- "betareg"
-tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula = group, taxa_level = taxlevel, filter_thres = 0.001)
-# "Estimate" and "Std.Error" represent the fitted coefficient and its standard error, respectively. Zvalue is the statistic.
-write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_Genus_singlefactor_", method, ".csv")))
+## Beta regression
+## We did not run beta regression because the glmm_beta method that follows is exactly the same as beta regression when there are no random effects. Moreover, the glmm_beta method is more robust
+# method <- "betareg"
+# tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula = group, taxa_level = taxlevel, filter_thres = 0.001)
+## "Estimate" and "Std.Error" represent the fitted coefficient and its standard error, respectively. Zvalue is the statistic.
+# write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_Genus_singlefactor_", method, ".csv")))
 
 # generalized linear mixed-effects model with the beta distribution family
 # when no random effect is provided, "glmm_beta" represents generalized linear model with a family function of beta distribution and is totally same with "betareg" (beta regression)
@@ -88,32 +93,77 @@ tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula =
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_Genus_singlefactor_", method, ".csv")))
 
 
+
+
+
+
 ##################################################################
 ##  Genus level     relative abundance      multiple factor   ####
 ##################################################################
 
-formula <- "Cropping+Fertilization"
+formula <- "Compartment+Cropping+Fertilization"
 taxlevel <- "Genus"
 
 method <- "anova"
-tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula = formula, taxa_level = taxlevel, transformation = "AST", filter_thres = 0.001)
+tmp <- trans_diff$new(dataset = tmp_microtable, method = method, formula = formula, taxa_level = taxlevel, transformation = "AST", filter_thres = 0.001)
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_Genus_multifactor_", method, ".csv")))
 
 # linear regression with arcsine transformation
 method <- "lm"
-tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula = formula, taxa_level = taxlevel, transformation = "AST", filter_thres = 0.001)
+tmp <- trans_diff$new(dataset = tmp_microtable, method = method, formula = formula, taxa_level = taxlevel, transformation = "AST", filter_thres = 0.001)
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_Genus_multifactor_", method, ".csv")))
 
-# beta regression
-method <- "betareg"
-tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula = formula, taxa_level = taxlevel, filter_thres = 0.001)
-write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_Genus_multifactor_", method, ".csv")))
 
 # generalized linear mixed-effects model with the beta distribution family
 # when no random effect is provided, "glmm_beta" represents generalized linear model with a family function of beta distribution and is totally same with "betareg" (beta regression)
 method <- "glmm_beta"
-tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula = formula, taxa_level = taxlevel, filter_thres = 0.001)
+tmp <- trans_diff$new(dataset = tmp_microtable, method = method, formula = formula, taxa_level = taxlevel, filter_thres = 0.001)
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_Genus_multifactor_", method, ".csv")))
+
+# Figure 4c
+
+tmp$res_diff %<>% .[.$Factors != "(Intercept)", ]
+tmp$res_diff %<>% .[.$Factors != "Model", ]
+tmp$res_diff %<>% .[.$Factors != "Compartment", ]
+tmp$res_diff %<>% .[.$Factors != "Cropping", ]
+tmp$res_diff %<>% .[.$Factors != "Fertilization", ]
+
+# filter those without extreme significance in treatments
+tmp_sel <- c()
+for(x in unique(tmp$res_diff$Taxa)){
+	tmp_table <- tmp$res_diff[tmp$res_diff$Taxa == x, ]
+	tmp_table <- tmp_table[tmp_table$Factors %in% c("CroppingRC", "FertilizationNPK", "FertilizationNPKS"), ]
+	if(any(grepl("**", tmp_table$Significance, fixed = TRUE))){
+		tmp_sel <- c(tmp_sel, x)
+	}else{
+		next
+	}
+}
+
+tmp$res_diff %<>% .[tmp$res_diff$Taxa %in% tmp_sel, ]
+
+# adjust the group names
+tmp$res_diff$Factors %<>% gsub("CompartmentRhizosphere", "Compartment: Rhizosphere", .)
+tmp$res_diff$Factors %<>% gsub("CompartmentEndophyte", "Compartment: Endophyte", .)
+tmp$res_diff$Factors %<>% gsub("CroppingRC", "Cropping: RC", .)
+tmp$res_diff$Factors %<>% gsub("FertilizationNPK", "Fertilization: NPK", .)
+tmp$res_diff$Factors %<>% gsub("FertilizationNPKS", "Fertilization: NPKS", .)
+
+# remove the genera without standard names
+tmp_sel <- tmp$res_diff$Taxa %>% grepl("\\d+", .)
+tmp$res_diff %<>% .[! tmp_sel, ]
+# delete the prefix
+tmp$res_diff$Taxa %<>% gsub(".*g__", "", .)
+
+tmp$res_diff$Taxa[tmp$res_diff$Taxa == "Allorhizobium-Neorhizobium-Pararhizobium-Rhizobium"] <- "Rhizobium"
+tmp$res_diff$Taxa[tmp$res_diff$Taxa == "Burkholderia-Caballeronia-Paraburkholderia"] <- "Burkholderia"
+
+g2 <- tmp$plot_diff_bar(heatmap_cell = "Estimate", heatmap_lab_fill = "Coef", xtext_angle = 30, xtext_size = 16, filter_feature = "",
+	text_x_order = c("Compartment: Rhizosphere", "Compartment: Endophyte", "Cropping: RC", "Fertilization: NPK", "Fertilization: NPKS")) + 
+	theme(legend.position = "left")
+
+cowplot::save_plot(file.path(output_dir, "Diff_abund_test_Genus_multifactor_glmmbeta.png"), g2, base_aspect_ratio = 1.3, dpi = 300, base_height = 9)
+
 
 
 
@@ -159,11 +209,6 @@ write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_multitax_m
 # linear regression with arcsine transformation
 method <- "lm"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula = formula, taxa_level = taxlevel, transformation = "AST", filter_thres = 0.001)
-write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_multitax_multifactor_", method, ".csv")))
-
-# beta regression
-method <- "betareg"
-tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula = formula, taxa_level = taxlevel, filter_thres = 0.005)
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_multitax_multifactor_", method, ".csv")))
 
 # generalized linear mixed-effects model with the beta distribution family

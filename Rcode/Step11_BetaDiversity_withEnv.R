@@ -59,9 +59,16 @@ t1$trans_ordination(adjust_arrow_length = TRUE, min_perc_env = 0.2, max_perc_env
 # save the transformed data of scores and arrows to the directory
 write.csv(t1$res_ordination_trans$df_sites, file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_trans_sample.csv"))
 write.csv(t1$res_ordination_trans$df_arrows, file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_trans_arrow.csv"))
-
+# Figure 3d
 g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Group")
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_dbRDA.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
+
+# with feature selection
+t1$cal_ordination(method = method, use_measure = "bray", feature_sel = TRUE)
+t1$trans_ordination(adjust_arrow_length = TRUE, min_perc_env = 0.2, max_perc_env = 1)
+# Figure 3e
+g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Group")
+cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_dbRDA_featuresel.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
 
 
@@ -138,7 +145,7 @@ write.csv(t1$res_mantel, file.path(output_dir, "BetaDiv_mantel_rhizo_bray_byCrop
 #########################################
 # correlation
 t1 <- trans_env$new(dataset = tmp_microtable_rarefy_rhizo, env_cols = 7:19, standardize = TRUE)
-
+# Figure 3f
 g1 <- t1$plot_scatterfit(
     x = tmp_microtable_rarefy_rhizo$beta_diversity$bray[rownames(t1$data_env), rownames(t1$data_env)], y = "pH",
 	type = "cor", group = "Cropping", group_order = c("CC", "RC"),

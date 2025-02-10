@@ -39,6 +39,7 @@ trans_vennobj$data_summary %<>% .[.$Counts != 0, ]
 # The "Count" column represents the feature number in each set; The "Abundance" column denotes the percentage that each part constitutes of the total.
 write.csv(trans_vennobj$data_summary, file.path(output_dir, "Coretaxa_intersection.csv"))
 
+# Figure 2a
 # bar plot for intersections
 g1 <- trans_vennobj$plot_bar(sort_samples = FALSE, left_background_fill = "white")
 cowplot::save_plot(file.path(output_dir, "Coretaxa_intersection.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 7)
@@ -54,6 +55,7 @@ write.csv(trans_vennobj_mt$taxa_abund$Genus, file.path(output_dir, "Coretaxa_int
 tmp_x <- trans_vennobj$data_summary %>% tibble::rownames_to_column(.) %>% .[order(.$Counts, decreasing = TRUE), ] %>% .$rowname
 
 trans_vennobj_mt_abund <- trans_abund$new(dataset = trans_vennobj_mt, taxrank = "Genus", ntaxa = 10)
+# Figure 2b
 g2 <- trans_vennobj_mt_abund$plot_bar(bar_full = TRUE, legend_text_italic = T, xtext_angle = 40, order_x = tmp_x) + ylab("Ratio (%)") + theme(plot.margin = unit(c(1, 0, 0, 2), "cm"))
 
 cowplot::save_plot(file.path(output_dir, "Coretaxa_intersection_Genusratio.png"), g2, base_aspect_ratio = 1.3, dpi = 300, base_height = 7)

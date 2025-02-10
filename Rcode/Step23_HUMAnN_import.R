@@ -26,15 +26,14 @@ load(input_path)
 ######################################################
 
 # File 'match_table.xlsx' is used to replace the sample names in abundance file to make them same with those in provided sample metadata.
-# If the samples names in provided sample metadata is totally same with those in feature abundance table, this file is not needed.
+# If the samples names in provided sample metadata is totally same with those in feature abundance table, this file is not needed (match_table = NULL in humann2meco function).
 match_table_path <- "./Input/2.Metagenome/match_table.xlsx"
 
-
-# MetaCyc
+# MetaCyc abundance file path
 file_path <- "./Input/2.Metagenome/HUMAnN3/Metacyc_pathabundance_joint_table.tsv"
 
 # generate microtable object
-# The parameters 'sample_table' and 'match_table' support either a file (e.g., csv, tsv or Excel) or a data.frame object in R.
+# The parameters 'sample_table' and 'match_table' support either a file (e.g., csv, tsv or Excel) or a data.frame object in R. For specific instructions, please refer to the help documentation of the humann2meco function.
 tmp_microtable <- humann2meco(file_path, db = "MetaCyc", match_table = match_table_path, sample_table = amplicon_16S_microtable$sample_table)
 # remove the pathways classified into "unclassified" class
 tmp_microtable$tax_table %<>% subset(Superclass1 != "unclassified")

@@ -1,4 +1,7 @@
 
+# allow more waiting time to download each package
+options(timeout = 1000)
+
 
 # install microeco package 
 install.packages("microeco")
@@ -62,6 +65,7 @@ BiocManager::install("Maaslin2")
 
 # for data conversion
 BiocManager::install("phyloseq")
+BiocManager::install("microbiome")
 
 # some tree-like plot 
 BiocManager::install("ggtree")
@@ -78,24 +82,30 @@ install.packages("huge")
 install.packages("future.apply")
 install.packages("truncnorm")
 install.packages("Rmpfr")
-install.packages("extdata/SparseDOSSA2_0.99.2.tar.gz", type = "source")
+install.packages("extdata/SparseDOSSA2_0.99.2.tar.gz", repos = NULL, type = "source")
 
+install.packages("extdata/mecodev_0.2.0.tar.gz", repos = NULL, type = "source")
 
 
 ######################################################################
 ######################################################################
 # Test whether each package has been correctly installed
 library(microeco)
-if(packageVersion("microeco") < '1.10.0'){stop("Minimum version of microeco package should be 1.10.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
+if(packageVersion("microeco") < '1.13.0'){stop("Minimum version of microeco package should be 1.13.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
 library(file2meco)
 if(packageVersion("file2meco") < '0.9.0'){stop("Minimum version of file2meco package should be 0.9.0! Current version is ", packageVersion("file2meco"), " ! Please reinstall it!")}
+library(ANCOMBC)
+if(packageVersion("ANCOMBC") < '2.8.1'){stop("Minimum version of ANCOMBC package should be 2.8.1! Current version is ", packageVersion("ANCOMBC"), " ! Please reinstall it from Bioconductor!")}
+library(ggpubr)
 library(aplot)
 library(ggh4x)
 library(cowplot)
+library(GUniFrac)
 library(agricolae)
 library(FSA)
 library(rcompanion)
 library(performance)
+library(ggraph)
 library(Boruta)
 library(rsample)
 library(randomForest)
@@ -107,13 +117,15 @@ library(caretEnsemble)
 library(MicrobiomeStat)
 library(metagenomeSeq)
 library(ALDEx2)
-library(ANCOMBC)
 library(edgeR)
 library(DESeq2)
 library(Maaslin2)
 library(phyloseq)
+library(microbiome)
 library(ggtree)
+library(ropls)
 library(SparseDOSSA2)
+library(mecodev)
 
 
 

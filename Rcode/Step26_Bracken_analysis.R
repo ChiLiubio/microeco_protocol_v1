@@ -42,18 +42,20 @@ p1 <- ggpubr::ggarrange(g1, g2, g3, ncol = 1, nrow = 3, heights = c(1, 1, 1))
 
 cowplot::save_plot(file.path(output_dir, "Bracken_barplot_rawabund.png"), p1, base_aspect_ratio = 1.1, dpi = 300, base_height = 11)
 
-# show the mean of original abundance for each group
+# show the mean of original abundance (in the taxa_abund list of microtable object) for each group
 tmp_microtable_group <- tmp_microtable$merge_samples("Group")
-
-tmp <- microtable$new(tmp_microtable$taxa_abund$Genus, sample_table = tmp_microtable$sample_table)
+# extract the abundance and generate a new microtable object instead of runing cal_abund function
+tmp <- microtable$new(tmp_microtable$taxa_abund$Species, sample_table = tmp_microtable$sample_table)
 tmp_2 <- tmp$merge_samples("Group")
-tmp_microtable_group$taxa_abund$Genus <- tmp_2$otu_table
-
-tmp <- trans_abund$new(dataset = tmp_microtable_group, taxrank = "Genus", use_percentage = FALSE)
+tmp_microtable_group$taxa_abund$Species <- tmp_2$otu_table
+# thus the data for visualization comes from the original taxa_abund list of microtable object, not the calculated abundance from otu_table
+tmp <- trans_abund$new(dataset = tmp_microtable_group, taxrank = "Species", use_percentage = FALSE)
+# Figure 6e
 g1 <- tmp$plot_bar(others_color = "grey70", bar_full = FALSE, xtext_size = 15, xtext_angle = 30, barwidth = 0.618) + ylab("Raw abundance")
-cowplot::save_plot(file.path(output_dir, "Bracken_barplot_rawabund_groupmean.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 5)
+cowplot::save_plot(file.path(output_dir, "Bracken_barplot_rawabund_groupmean_Species.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 5)
 
 
+######################################################
 # relative abundance visualization
 tmp_microtable <- clone(Bracken_microtable_relTRUE_K1)
 
@@ -70,10 +72,21 @@ p1 <- ggpubr::ggarrange(g1, g2, g3, ncol = 1, nrow = 3, heights = c(1, 1, 1))
 
 cowplot::save_plot(file.path(output_dir, "Bracken_barplot_relabund.png"), p1, base_aspect_ratio = 1.1, dpi = 300, base_height = 11)
 
+# show the mean of relative abundance (in the taxa_abund list of microtable object) for each group
+tmp_microtable_group <- tmp_microtable$merge_samples("Group")
+# extract the abundance and generate a new microtable object instead of runing cal_abund function
+tmp <- microtable$new(tmp_microtable$taxa_abund$Species, sample_table = tmp_microtable$sample_table)
+tmp_2 <- tmp$merge_samples("Group")
+tmp_microtable_group$taxa_abund$Species <- tmp_2$otu_table
+# Figure 6f
+tmp <- trans_abund$new(dataset = tmp_microtable_group, taxrank = "Species")
+g1 <- tmp$plot_bar(others_color = "grey70", bar_full = FALSE, xtext_size = 15, xtext_angle = 30, barwidth = 0.618) + theme(legend.text = element_text(size = 11))
+cowplot::save_plot(file.path(output_dir, "Bracken_barplot_relabund_groupmean_Species.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 5)
 
 
-
+######################################################
 # recalculate relative abundance based on the species abundance (otu_table) for Bracken_microtable_relTRUE_K1
+tmp_microtable <- clone(Bracken_microtable_relTRUE_K1)
 tmp_microtable$cal_abund()
 
 tmp <- trans_abund$new(dataset = tmp_microtable, taxrank = "Kingdom")
@@ -89,7 +102,18 @@ p1 <- ggpubr::ggarrange(g1, g2, g3, ncol = 1, nrow = 3, heights = c(1, 1, 1))
 
 cowplot::save_plot(file.path(output_dir, "Bracken_barplot_relabund_recal_K1.png"), p1, base_aspect_ratio = 1.1, dpi = 300, base_height = 11)
 
+# merge samples for each group and recalculate the relative abundance
+tmp_microtable_group <- tmp_microtable$merge_samples("Group")
+tmp_microtable_group$cal_abund()
 
+tmp <- trans_abund$new(dataset = tmp_microtable_group, taxrank = "Kingdom")
+tmp$data_abund %<>% .[! .$Taxonomy %in% c("Bacteria", "Archaea"), ]
+# Figure 6g
+g1 <- tmp$plot_bar(others_color = "grey70", bar_full = FALSE, xtext_size = 15, xtext_angle = 30, barwidth = 0.618) + theme(legend.text = element_text(size = 11))
+cowplot::save_plot(file.path(output_dir, "Bracken_barplot_relabund_recal_K1_groupmean_Kingdom.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 5)
+
+
+######################################################
 # recalculate relative abundance based on the species abundance (otu_table) for Bracken_microtable_relTRUE_K2
 tmp_microtable <- clone(Bracken_microtable_relTRUE_K2)
 
@@ -109,6 +133,8 @@ p1 <- ggpubr::ggarrange(g1, g2, g3, ncol = 1, nrow = 3, heights = c(1, 1, 1))
 cowplot::save_plot(file.path(output_dir, "Bracken_barplot_relabund_recal_K2.png"), p1, base_aspect_ratio = 1.1, dpi = 300, base_height = 11)
 
 
+
+######################################################
 # recalculate relative abundance based on the species abundance (otu_table) for Bracken_microtable_relTRUE_K3
 tmp_microtable <- clone(Bracken_microtable_relTRUE_K3)
 
@@ -127,6 +153,15 @@ p1 <- ggpubr::ggarrange(g1, g2, g3, ncol = 1, nrow = 3, heights = c(1, 1, 1))
 
 cowplot::save_plot(file.path(output_dir, "Bracken_barplot_relabund_recal_K3.png"), p1, base_aspect_ratio = 1.1, dpi = 300, base_height = 11)
 
+
+tmp_microtable_group <- tmp_microtable$merge_samples("Group")
+tmp_microtable_group$cal_abund()
+
+tmp <- trans_abund$new(dataset = tmp_microtable_group, taxrank = "Kingdom")
+tmp$data_abund %<>% .[! .$Taxonomy %in% c("Bacteria", "Archaea"), ]
+# Figure 6h
+g1 <- tmp$plot_bar(others_color = "grey70", bar_full = FALSE, xtext_size = 15, xtext_angle = 30, barwidth = 0.618) + theme(legend.text = element_text(size = 11))
+cowplot::save_plot(file.path(output_dir, "Bracken_barplot_relabund_recal_K3_groupmean_Kingdom.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 5)
 
 
 ####################################################################
@@ -203,6 +238,93 @@ t1$res_diff %<>% .[.$Taxa %in% c(tmp_feature_1, tmp_feature_2), ]
 
 g1 <- t1$plot_diff_bar(filter_feature = "", heatmap_cell = "Estimate", heatmap_lab_fill = "Estimate")
 cowplot::save_plot(file.path(output_dir, "Bracken_betareg_Genus_extremsig.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 10)
+
+
+
+
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+# Optional
+# merge the 16S QIIME2 result and Bracken result into one for the comparison
+library(tibble)
+library(dplyr)
+library(microeco)
+library(magrittr)
+
+# load all the required data
+# load 16S data
+input_path <- "./Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable_rarefy.RData"
+load(input_path)
+# load Bracken data
+input_path <- "Output/2.Metagenome/Stage9_Bracken/Bracken_microtable_relFALSE.RData"
+load(input_path)
+
+# calculate the relative abundance at Genus level, i.e. the total sum scaling
+# first filter out the samples that are not used in the metagenomic sequencing
+amplicon_16S_microtable_rarefy_select <- clone(amplicon_16S_microtable_rarefy)
+amplicon_16S_microtable_rarefy_select$sample_table %<>% .[rownames(.) %in% Bracken_microtable_relFALSE$sample_names(), ]
+amplicon_16S_microtable_rarefy_select$tidy_dataset()
+amplicon_16S_microtable_rarefy_select$cal_abund(select_cols = "Genus")
+# filter out the taxa that donot belong to prokaryotes to make two data comparable
+Bracken_microtable_relFALSE_prok <- clone(Bracken_microtable_relFALSE)
+Bracken_microtable_relFALSE_prok$tax_table %<>% .[.$Kingdom %in% c("k__Archaea", "k__Bacteria"), ]
+Bracken_microtable_relFALSE_prok$tidy_dataset()
+Bracken_microtable_relFALSE_prok$cal_abund(select_cols = "Genus")
+
+# new otu_table
+tmp_16S <- amplicon_16S_microtable_rarefy_select$taxa_abund$Genus
+colnames(tmp_16S) %<>% paste0("amplicon_", .)
+tmp_16S %<>% rownames_to_column
+tmp_Bracken <- Bracken_microtable_relFALSE_prok$taxa_abund$Genus	
+colnames(tmp_Bracken) %<>% paste0("metagenome_", .)
+tmp_Bracken %<>% rownames_to_column
+# merge two new tables
+tmp_otutable <- full_join(tmp_16S, tmp_Bracken, by = c("rowname" = "rowname"))
+rownames(tmp_otutable) <- tmp_otutable[, 1]
+tmp_otutable <- tmp_otutable[, -1]
+# assign 0 to NA
+tmp_otutable[is.na(tmp_otutable)] <- 0
+
+# new tax_table
+# select Kingdom and Genus as the example
+tmp_16S <- amplicon_16S_microtable_rarefy_select$tax_table[, c(1, 6)] %>% .[.$Genus != "g__", ] %>% unique
+tmp_Bracken <- Bracken_microtable_relFALSE_prok$tax_table[, c(1, 6)] %>% .[.$Genus != "g__", ] %>% unique
+tmp_taxtable <- rbind.data.frame(tmp_16S, tmp_Bracken) %>% unique
+# must assign row names to the table
+rownames(tmp_taxtable) <- tmp_taxtable$Genus
+
+
+# create microtable object
+merged_16S_Kraken <- microtable$new(otu_table = tmp_otutable, tax_table = tmp_taxtable)
+# complement sample_table
+tmp_sampletable <- merged_16S_Kraken$sample_table
+colnames(tmp_sampletable)[2] <- "Method"
+# generate the Method column for the further comparison
+tmp_sampletable$Method %<>% gsub("_.*", "", .)
+# add original metadata into the new sample table
+tmp_sampletable$raw_SampleID <- tmp_sampletable$SampleID
+tmp_sampletable$raw_SampleID %<>% gsub(".*_", "", .)
+tmp_sampletable <- left_join(tmp_sampletable, amplicon_16S_microtable_rarefy_select$sample_table, by = c("raw_SampleID" = "SampleID"))
+# add row names
+rownames(tmp_sampletable) <- tmp_sampletable[, 1]
+# assign the table back to the microtable object
+merged_16S_Kraken$sample_table <- tmp_sampletable
+
+# generate abundance; rel = FALSE means the original abundance in the otu_table
+merged_16S_Kraken$tidy_dataset()
+merged_16S_Kraken$cal_abund(rel = FALSE)
+
+# trans_abund
+t1 <- trans_abund$new(dataset = merged_16S_Kraken, taxrank = "Genus", ntaxa = 20)
+t1$plot_bar(others_color = "grey70", facet = "Method", xtext_size = 5, xtext_angle = 30)
+
+
+
+
+
+
+
 
 
 

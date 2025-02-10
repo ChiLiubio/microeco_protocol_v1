@@ -67,6 +67,7 @@ tmp_transvennobj <- trans_venn$new(tmp_mtobj, ratio = "numratio", name_joint = "
 # only show the elements with a relative large number
 tmp_transvennobj$data_summary %<>% .[.$Counts > 4, ]
 
+# Figure 4a
 g1 <- tmp_transvennobj$plot_bar(sort_samples = FALSE)
 cowplot::save_plot(file.path(output_dir, "diff_methods_singlefactor_threegroups_venn_bar.png"), g1, base_aspect_ratio = 1.5, dpi = 300, base_height = 7)
 
@@ -86,6 +87,7 @@ library(tibble)
 tmp_x <- tmp_transvennobj$data_summary %>% rownames_to_column %>% .[order(.$Counts, decreasing = TRUE), ] %>% .$rowname
 
 tmp_transvennobj_mt_abund <- trans_abund$new(dataset = tmp_transvennobj_mt, taxrank = "Genus", ntaxa = 10, use_percentage = TRUE)
+# Figure 4a
 g2 <- tmp_transvennobj_mt_abund$plot_bar(bar_full = FALSE, legend_text_italic = T, xtext_angle = 50, order_x = tmp_x) + ylab("Ratio (%)") + 
 	theme(legend.position = "left", plot.margin = unit(c(0, 0, 0, 4), "cm"))
 cowplot::save_plot(file.path(output_dir, "diff_methods_singlefactor_threegroups_venn_comp_Genus.png"), g2, base_aspect_ratio = 1.5, dpi = 300, base_height = 8)
