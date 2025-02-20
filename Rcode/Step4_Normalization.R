@@ -23,7 +23,7 @@ set.seed(123)
 
 tmp_microtable <- clone(amplicon_16S_microtable)
 
-# use trans_norm to perform all the normalization methods
+# use trans_norm class to perform all the normalization methods
 tmp <- trans_norm$new(dataset = tmp_microtable)
 
 # Rarefaction
@@ -66,6 +66,12 @@ save(amplicon_16S_microtable_TSS, file = file.path(output_dir, "amplicon_16S_mic
 formula <- "Compartment+Cropping+Fertilization"
 amplicon_16S_microtable_DESeq2 <- tmp$norm(method = "DESeq2", group = formula)
 save(amplicon_16S_microtable_DESeq2, file = file.path(output_dir, "amplicon_16S_microtable_DESeq2.RData"), compress = TRUE)
+
+# Wrench <doi: 10.1186/s12864-018-5160-5>
+# condition parameter is necessary to be provided
+# use condition = "Compartment" as the example; it is suggested to be provided according to the analysis context
+amplicon_16S_microtable_Wrench <- tmp$norm(method = "Wrench", condition = "Compartment")
+save(amplicon_16S_microtable_Wrench, file = file.path(output_dir, "amplicon_16S_microtable_Wrench.RData"), compress = TRUE)
 
 
 

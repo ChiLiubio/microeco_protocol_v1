@@ -1,14 +1,14 @@
 ## Amplicon sequencing data analysis
 ## 
-## Import QIIME2-qza format files to generate microtable object
+## Import QIIME2 .qza format files to generate microtable object
 ## 
 
 
 ###################################################
 # load packages
 library(microeco) # data analysis
-library(file2meco) # for data import
-library(magrittr) # for pipe operators
+library(file2meco) # for data importing
+library(magrittr) # for pipe operator
 library(readxl) # import data from Excel spreadsheet
 ###################################################
 # create output directory if it does not exist
@@ -48,7 +48,7 @@ amplicon_16S_microtable_raw <- clone(tmp_microtable)
 
 # use save function to save the microtable object to output directory
 save(amplicon_16S_microtable_raw, file = file.path(output_dir, "amplicon_16S_microtable_raw.RData"), compress = TRUE)
-# The benefits of saving data as a local RData format are 1) backing up data to a local folder; 2) facilitating the quick reloading of data into R.
+# The benefits of saving data to a local file in .RData format: 1) backing up data to a local folder; 2) facilitating the quick reloading of data into R in the future analysis.
 
 
 ##################################################################
@@ -72,7 +72,7 @@ tmp_microtable2 <- qiime2meco(
 	)
 tmp_microtable2$tidy_dataset()
 
-# Provided sample_table is a data.frame object
+# Provided sample_table is a data.frame object when using the qiime2meco function
 tmp_sample <- as.data.frame(read_excel("Input/1.Amplicon/Sample_info.xlsx", col_names = TRUE), stringsAsFactors = FALSE)
 rownames(tmp_sample) <- tmp_sample[, 1]
 
@@ -86,15 +86,16 @@ tmp_microtable3$tidy_dataset()
 
 ##################################################################
 ##################################################################
-# Other examples of data reading with QIIME2 qza-converted files (This is a small dataset, intended solely for demonstrating the steps)
-# use microtable$new function to construct microtable object
+# Other examples of data reading with QIIME2 qza-converted files (This is a small dataset, intended solely for showing the steps)
+# use microtable$new function to construct a microtable object
 
 # feature abundance
 feature_table <- read.table("Input/1.Amplicon/QIIME2_converted/feature_table.tsv", sep = "\t", skip = 1, comment.char = "$", header = TRUE, row.names = 1)
 
 # taxonomy table
 taxonomy_table_raw <- read.table("Input/1.Amplicon/QIIME2_converted/taxonomy.tsv", sep = "\t", skip = 1, comment.char = "$", header = FALSE)
-# split the merged taxonomy to generate a table
+# split the merged taxonomy to generate a taxonomic table
+# please adjust split parameter when the connector symbol is not ";"
 taxonomy_table <- file2meco:::split_assignments(taxonomy_table_raw[, 2], ranks = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"), split = ";") %>% as.data.frame
 rownames(taxonomy_table) <- taxonomy_table_raw[, 1]
 
@@ -107,9 +108,10 @@ sequences <- Biostrings::readDNAStringSet("Input/1.Amplicon/QIIME2_converted/dna
 # construct microtable object
 test <- microtable$new(sample_table = tmp_sample, otu_table = feature_table, tax_table = taxonomy_table, phylo_tree = tree, rep_fasta = sequences)
 
+# tidy all the data inside the object to ensure that samples and features correspond across different data
 test$tidy_dataset()
 
-# tidy taxonomy information
+# tidy taxonomy information to unify the naming of taxonomy
 test %<>% tidy_taxonomy
 
 ##################################################################

@@ -40,6 +40,7 @@ t1 <- trans_diff$new(dataset = tmp_microtable, method = "lm", formula = "Compart
 
 write.csv(t1$res_diff, file.path(output_dir, "Metabolome_diff_lm_log.csv"))
 
+# extract the result table, filter out useless items and adjust the names for the visualization
 tmp_table <- t1$res_diff
 tmp_table$Significance %<>% gsub("ns", "", .)
 tmp_table %<>% .[.$Factors != "(Intercept)", ]

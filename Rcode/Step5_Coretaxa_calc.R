@@ -54,10 +54,10 @@ res <- rbind(data.frame(compartment = "S", ASV = S$taxa_names()), data.frame(com
 # write the data.frame object containing core ASV names in each compartment to the output directory
 write.csv(res, file.path(output_dir, "Coretaxa_calc_compartments.csv"))
 # Description of the result file: 
-#	The "compartment" column represents the different compartments, and the "ASV" column contains the names of the core ASVs identified in each compartment.
+#	The "compartment" column represents different compartments, and the "ASV" column contains the names of core ASVs identified in each compartment.
 
 
-# also save each microtable object to directory
+# also save each microtable object to local files with .RData format
 save(S, file = file.path(output_dir, "Coretaxa_Bulk.RData"), compress = TRUE)
 save(RS, file = file.path(output_dir, "Coretaxa_Rhizosphere.RData"), compress = TRUE)
 save(R, file = file.path(output_dir, "Coretaxa_Endophyte.RData"), compress = TRUE)

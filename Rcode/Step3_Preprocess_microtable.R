@@ -21,10 +21,10 @@ load(input_path)
 tmp_microtable <- clone(amplicon_16S_microtable_raw)
 
 # filter the ASV not classified in the Kingdom Archaea or Bacteria
-# If only bacteria are needed, please use: Kingdom == "k__Bacteria"
+# If only bacteria are needed, please use: subset(Kingdom == "k__Bacteria")
 tmp_microtable$tax_table %<>% base::subset(Kingdom == "k__Archaea" | Kingdom == "k__Bacteria")
 
-# remove the lines containing mitochondria or chloroplast regardless of word case in the tax_table
+# Optional; remove the lines containing mitochondria or chloroplast regardless of word case in the tax_table
 tmp_microtable$filter_pollution(taxa = c("mitochondria", "chloroplast"))
 
 # tidy all the data inside the object

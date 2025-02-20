@@ -28,9 +28,9 @@ tmp_microtable <- clone(amplicon_16S_microtable_CLR)
 
 # filter low abundance
 tmp_microtable$filter_taxa(rel_abund = 0.0005)
-# add ASV to tax_table; as taxa_abund is calculateed based on the tax_table
+# add ASV to tax_table to generate ASV abundance in the taxa_abund list, which is the input data in the trans_classifier class
 tmp_microtable$add_rownames2taxonomy(use_name = "ASV")
-# regenerate taxa_abund list with original abundance (i.e., normalized data)
+# regenerate taxa_abund list with original abundance (i.e., CLR-normalized data); now there is a table called 'ASV' in the taxa_abund list
 tmp_microtable$cal_abund(rel = FALSE)
 
 
@@ -51,7 +51,7 @@ write.csv(t1$data_train, file.path(output_dir, paste0("Classification_", taxa_le
 write.csv(t1$data_test, file.path(output_dir, paste0("Classification_", taxa_level, "_split_data_test.csv")))
 
 # Optional
-# feature selection or add other customized or manual selected data into the object
+# feature selection or add other customized operation to select features
 t1$cal_feature_sel(boruta.maxRuns = 300, boruta.pValue = 0.05)
 # save selected feature data to the directory
 write.csv(t1$data_feature, file.path(output_dir, paste0("Classification_", taxa_level, "_featuresel_boruta_featuredata.csv")))
@@ -67,6 +67,7 @@ t1$cal_predict()
 # save the trans_classifier object
 save(t1, file = file.path(output_dir, paste0("Classification_", taxa_level, "_model_rf_train_predict.RData")))
 
+# confusion matrix
 g1 <- t1$plot_confusionMatrix()
 cowplot::save_plot(file.path(output_dir, paste0("Classification_", taxa_level, "_model_rf_confusionMatrix.png")), g1, base_aspect_ratio = 1.5, dpi = 300, base_height = 6)
 
@@ -76,8 +77,10 @@ t1$cal_ROC(input = "train")
 write.csv(t1$res_ROC$res_roc, file.path(output_dir, paste0("Classification_", taxa_level, "_model_rf_ROC_train.csv")))
 # save the data for PR curve
 write.csv(t1$res_ROC$res_pr, file.path(output_dir, paste0("Classification_", taxa_level, "_model_rf_PR_train.csv")))
+# ROC curve
 g1 <- t1$plot_ROC()
 cowplot::save_plot(file.path(output_dir, paste0("Classification_", taxa_level, "_model_rf_ROC_train.png")), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 6)
+# PR curve
 g1 <- t1$plot_ROC(plot_type = "PR")
 cowplot::save_plot(file.path(output_dir, paste0("Classification_", taxa_level, "_model_rf_PR_train.png")), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 6)
 
@@ -96,6 +99,7 @@ cowplot::save_plot(file.path(output_dir, paste0("Classification_", taxa_level, "
 t1$cal_feature_imp(scale = TRUE)
 # In the result, 'Overall' represents MeanDecreaseGini.
 write.csv(t1$res_feature_imp, file.path(output_dir, paste0("Classification_", taxa_level, "_model_rf_feature_importance.csv")))
+# feature importance plot
 g1 <- t1$plot_feature_imp(coord_flip = FALSE, colour = "red", fill = "red", width = 0.6) + ylab("MeanDecreaseGini")
 cowplot::save_plot(file.path(output_dir, paste0("Classification_", taxa_level, "_model_rf_feature_importance.png")), g1, base_aspect_ratio = 1.3, dpi = 300, base_height = 6)
 

@@ -28,8 +28,10 @@ tmp <- trans_alpha$new(dataset = tmp_microtable, group = "Cropping", by_group = 
 tmp$cal_diff(method = "wilcox", measure = measure)
 # In the result, the P.adj column is the p value after adjustment with FDR method for method = "wilcox". To change the adjustment method, please use p_adjust_method parameter.
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_bycompart_wilcox.csv"))
+# default is box plot; use plot_type parameter to select the plot type
 g1 <- tmp$plot_alpha(measure = measure)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Cropping_bycompart_wilcox_boxplot.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
+# errorbar plot and add lines
 g1 <- tmp$plot_alpha(measure = measure, plot_type = "errorbar", add_line = TRUE, line_type = 2)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Cropping_bycompart_wilcox_errorbar_line.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
@@ -41,15 +43,18 @@ tmp <- trans_alpha$new(dataset = tmp_microtable, group = "Fertilization", by_gro
 
 tmp$cal_diff(method = "wilcox", measure = measure)
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Fertilization_bycompart_wilcox.csv"))
+# y_increase parameter: adjust the space of y axis among significance labels
 g1 <- tmp$plot_alpha(measure = measure, y_increase = 0.05)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Fertilization_bycompart_wilcox_boxplot.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
+# ANOVA method
 tmp$cal_diff(method = "anova", measure = measure)
 # The letters in the 'Letter' column are the result of post hoc test for one-way anova. To change the default 'duncan.test' method, please use anova_post_test parameter.
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Fertilization_bycompart_anova.csv"))
 g1 <- tmp$plot_alpha(measure = measure)
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Fertilization_bycompart_anova_boxplot.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
+# Kruskal-Wallis test with Dunn's multiple comparisons
 tmp$cal_diff(method = "KW_dunn", measure = measure, KW_dunn_letter = TRUE)
 # The file format is same with one-way ANOVA. The 'MonoLetter' column is for aligning letters to facilitate the viewing of results.
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Fertilization_bycompart_KW_dunn.csv"))
@@ -64,6 +69,7 @@ tmp <- trans_alpha$new(dataset = tmp_microtable, by_group = "Compartment")
 
 # for single measure
 measure <- "Shannon"
+# Cropping*Fertilization: Cropping+Fertilization+Cropping:Fertilization
 tmp$cal_diff(method = "anova", measure = measure, formula = "Cropping*Fertilization")
 write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_Fertilization_bycompart_twowayanova.csv"))
 
@@ -91,7 +97,10 @@ write.csv(tmp$res_diff, file.path(output_dir, "AlphaDiv_Cropping_bycompart_ttest
 tmp <- trans_alpha$new(dataset = tmp_microtable)
 tmp$cal_diff(method = "lm", formula = "Compartment+Cropping+Fertilization")
 
+# manipulate the table tmp$res_diff to make the plot better
+# filter out the (Intercept) item
 tmp$res_diff %<>% .[.$Factors != "(Intercept)", ]
+# adjust the group names
 tmp$res_diff$Factors %<>% gsub("CompartmentRhizosphere", "Compartment: Rhizosphere", .)
 tmp$res_diff$Factors %<>% gsub("CompartmentEndophyte", "Compartment: Endophyte", .)
 tmp$res_diff$Factors %<>% gsub("CroppingRC", "Cropping: RC", .)

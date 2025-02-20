@@ -33,15 +33,15 @@ tmp_microtable_rhizo$tidy_dataset()
 tmp_microtable_rhizo_group <- tmp_microtable_rhizo$merge_samples("Group")
 
 
-##################
+####################################
 # Abundance visualization
 
 # select pathway
-# rel = FALSE means the abundance of enrichment taxa is not converted to relative abundance
+# rel = FALSE: the abundance of enrichment taxa is not converted to relative abundance
 tmp_microtable$cal_abund(select_cols = 1:3, rel = FALSE)
 # donot use percentage because the abundance is RPK, not relative abundance
 tmp <- trans_abund$new(tmp_microtable, taxrank = "Superclass1", ntaxa = 10, use_percentage = FALSE)
-# bar_full = FALSE show original abundance instead of normalized 0-1
+# bar_full = FALSE: show original abundance instead of normalized 0-1
 g1 <- tmp$plot_bar(facet = c("Compartment", "Fertilization", "Cropping"), bar_full = FALSE, xtext_size = 4) + ylab("Abundance (RPK)")
 cowplot::save_plot(file.path(output_dir, "MetaCyc_barplot_Superclass1.png"), g1, base_aspect_ratio = 1.8, dpi = 300, base_height = 6)
 
@@ -54,7 +54,7 @@ cowplot::save_plot(file.path(output_dir, "MetaCyc_barplot_Superclass1_Phylum.png
 
 
 # visualization for the merged samples of rhizosphere data
-# rel = FALSE means the abundance of enrichment taxa is not converted to relative abundance
+# rel = FALSE: the abundance of enrichment taxa is not converted to relative abundance
 tmp_microtable_rhizo_group$cal_abund(select_cols = 1:3, rel = FALSE)
 # donot use percentage as the abundance is RPK, not relative abundance
 tmp <- trans_abund$new(tmp_microtable_rhizo_group, taxrank = "Superclass1", ntaxa = 10, use_percentage = FALSE)
@@ -69,13 +69,13 @@ tmp_microtable_rhizo_group$cal_abund(select_cols = c("Superclass1", "Phylum", "G
 tmp <- trans_abund$new(tmp_microtable_rhizo_group, taxrank = "Phylum", ntaxa = 10, delete_taxonomy_lineage = FALSE)
 # Figure 6b
 g1 <- tmp$plot_bar(xtext_size = 15, xtext_angle = 30, barwidth = 0.618) + theme(legend.text = element_text(size = 10.5))
-cowplot::save_plot(file.path(output_dir, "MetaCyc_barplot_Superclass1_Phylum_rhizo_merge.png"), g1, base_aspect_ratio = 1.8, dpi = 300, base_height = 6)
+cowplot::save_plot(file.path(output_dir, "MetaCyc_barplot_Superclass1_rhizo_merge_Phylum.png"), g1, base_aspect_ratio = 1.8, dpi = 300, base_height = 6)
 
 
 
 
 
-####################################
+######################################################
 # Differential test of features based on the rhizosphere data
 
 # pathway
@@ -122,6 +122,7 @@ t1$cal_ordination(method = "PCA", scale_species = TRUE, scale_species_ratio = 1)
 write.csv(t1$res_ordination$scores, file.path(output_dir, "MetaCyc_PCA_pathway_Score.csv"))
 # Columns PC1-PC3 represent the loadings in each axis. 'dist' is sum of squares for loadings of PC1 and PC2 and used to order the features.
 write.csv(t1$res_ordination$loading, file.path(output_dir, "MetaCyc_PCA_pathway_Loading.csv"))
+# loading_arrow = TRUE: show the arrows of loadings
 g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Compartment", loading_arrow = TRUE, loading_text_italic = FALSE)
 cowplot::save_plot(file.path(output_dir, "MetaCyc_PCA_pathway.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 

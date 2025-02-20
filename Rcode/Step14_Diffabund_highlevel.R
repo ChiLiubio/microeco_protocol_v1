@@ -79,7 +79,7 @@ cowplot::save_plot(file.path(output_dir, "Diff_abund_test_Genus_singlefactor_KWd
 
 
 ## Beta regression
-## We did not run beta regression because the glmm_beta method that follows is exactly the same as beta regression when there are no random effects. Moreover, the glmm_beta method is more robust
+## We did not run the method of "betareg" because the "glmm_beta" method that follows is exactly the same as beta regression when there are no random effects. Moreover, the glmm_beta method is more robust
 # method <- "betareg"
 # tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, formula = group, taxa_level = taxlevel, filter_thres = 0.001)
 ## "Estimate" and "Std.Error" represent the fitted coefficient and its standard error, respectively. Zvalue is the statistic.
@@ -120,15 +120,15 @@ method <- "glmm_beta"
 tmp <- trans_diff$new(dataset = tmp_microtable, method = method, formula = formula, taxa_level = taxlevel, filter_thres = 0.001)
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_Genus_multifactor_", method, ".csv")))
 
-# Figure 4c
-
+# Figure 4b
+# filter the useless item in the visualization
 tmp$res_diff %<>% .[.$Factors != "(Intercept)", ]
 tmp$res_diff %<>% .[.$Factors != "Model", ]
 tmp$res_diff %<>% .[.$Factors != "Compartment", ]
 tmp$res_diff %<>% .[.$Factors != "Cropping", ]
 tmp$res_diff %<>% .[.$Factors != "Fertilization", ]
 
-# filter those without extreme significance in treatments
+# filter those without extreme significance (**) in treatments
 tmp_sel <- c()
 for(x in unique(tmp$res_diff$Taxa)){
 	tmp_table <- tmp$res_diff[tmp$res_diff$Taxa == x, ]
@@ -155,6 +155,7 @@ tmp$res_diff %<>% .[! tmp_sel, ]
 # delete the prefix
 tmp$res_diff$Taxa %<>% gsub(".*g__", "", .)
 
+# replace these two genera names with brief names
 tmp$res_diff$Taxa[tmp$res_diff$Taxa == "Allorhizobium-Neorhizobium-Pararhizobium-Rhizobium"] <- "Rhizobium"
 tmp$res_diff$Taxa[tmp$res_diff$Taxa == "Burkholderia-Caballeronia-Paraburkholderia"] <- "Burkholderia"
 

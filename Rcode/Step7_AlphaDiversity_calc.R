@@ -1,6 +1,6 @@
 ##
 ## 
-## Calculate alpha diversity and save the results to a comma separated file
+## Calculate alpha diversity and save the data
 ## 
 ## 
 
@@ -9,6 +9,7 @@
 # load packages
 library(microeco)
 library(magrittr)
+library(mecodev)
 ###########################
 # create an output directory if it does not exist
 output_dir <- "./Output/1.Amplicon/Stage4_AlphaDiversity"
@@ -17,7 +18,7 @@ if(! dir.exists(output_dir)){
 }
 # load data
 input_path <- "Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable_rarefy.RData"
-# first check whether saved data path exists
+# first check whether the data path exists
 if(! file.exists(input_path)){
 	stop("Please first run the scripts in Stage2 !")
 }
@@ -28,8 +29,9 @@ load(input_path)
 ###########################
 
 # rarefaction curve based on the Shannon-Weiver diversity
-library(mecodev)
+# use trans_rarefy class in mecodev package
 tmp <- trans_rarefy$new(amplicon_16S_microtable, alphadiv = c("Shannon"), depth = c(0, 10, 50, 500, 1000, 2000, 4000, 6000, 10000, 15000, 20000, 25000, 30000))
+# show_samplename: add the sample labels; For the colors of different groups, please use color parameter, such as: color = "Group"
 g1 <- tmp$plot_rarefy(show_samplename = TRUE, color_values = rep("grey50", 100), show_legend = FALSE)
 
 cowplot::save_plot(file.path(output_dir, "AlphaDiv_Rarefactioncurve_Shannon.png"), g1, base_aspect_ratio = 1.4, dpi = 300, base_height = 5)
@@ -52,7 +54,6 @@ write.csv(tmp_microtable$alpha_diversity, file.path(output_dir, "AlphaDiv_metric
 #	"Coverage" represents good's coverage.
 # 	"Pielou" denotes the Pielou evenness index.
 # 	"Chao1" and "ACE" reprenset Chao1 and ACE indexes, respectively.
-
 
 
 # save the microtable object with the alpha diversity

@@ -27,12 +27,12 @@ load(input_path)
 ###########################
 
 
-# select data for rhizosphere soil
+# select samples of rhizosphere soil from raw data
 tmp_microtable_rhizo <- clone(amplicon_16S_microtable)
 tmp_microtable_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
 tmp_microtable_rhizo$tidy_dataset()
 
-# select rarefied data for rhizosphere soil
+# select samples of rhizosphere soil from rarefied data
 tmp_microtable_rarefy_rhizo <- clone(amplicon_16S_microtable_rarefy)
 tmp_microtable_rarefy_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
 tmp_microtable_rarefy_rhizo$tidy_dataset()
@@ -41,7 +41,7 @@ tmp_microtable_rarefy_rhizo$tidy_dataset()
 # calculate Bray-Curtis and UniFrac dissimilarity for rarefied rhizosphere data
 measure <- "bray"
 tmp_microtable_rarefy_rhizo$cal_betadiv(method = measure, unifrac = TRUE)
-# save the Bray-Curtis dissimilarity matrix
+# save the Bray-Curtis dissimilarity matrix; tmp_microtable_rarefy_rhizo$beta_diversity is a list
 write.csv(tmp_microtable_rarefy_rhizo$beta_diversity[[measure]], file.path(output_dir, "BetaDiv_rarefy_rhizo_bray.csv"))
 # save the weighted UniFrac dissimilarity matrix
 write.csv(tmp_microtable_rarefy_rhizo$beta_diversity$wei_unifrac, file.path(output_dir, "BetaDiv_rarefy_rhizo_weightedUniFrac.csv"))
@@ -53,7 +53,7 @@ measure <- "jaccard"
 tmp_microtable_rarefy_rhizo$cal_betadiv(method = measure)
 write.csv(tmp_microtable_rarefy_rhizo$beta_diversity[[measure]], file.path(output_dir, "BetaDiv_rarefy_rhizo_jaccard_binary.csv"))
 
-# calculate Aitchison dissimilarity for non-rarefied rhizosphere data
+# calculate Aitchison dissimilarity for raw rhizosphere data
 measure <- "aitchison"
 tmp_microtable_rhizo$cal_betadiv(method = measure)
 write.csv(tmp_microtable_rhizo$beta_diversity[[measure]], file.path(output_dir, "BetaDiv_rarefy_rhizo_aitchison.csv"))
@@ -111,6 +111,7 @@ tmp_microtable_rarefy_rhizo_genus$tax_table %<>% .[.$Genus != "g__", ]
 # also delete the genera with number in the names
 tmp_microtable_rarefy_rhizo_genus$tax_table %<>% .[!grepl("\\d+", .$Genus), ]
 tmp_microtable_rarefy_rhizo_genus$tidy_dataset()
+# use genera names as feature names in otu_table and tax_table
 rownames(tmp_microtable_rarefy_rhizo_genus$tax_table) <- rownames(tmp_microtable_rarefy_rhizo_genus$otu_table) <- gsub("g__", "", tmp_microtable_rarefy_rhizo_genus$tax_table$Genus)
 
 
@@ -122,7 +123,7 @@ t1$cal_ordination(method = "PCA", scale_species = TRUE, scale_species_ratio = 1)
 write.csv(t1$res_ordination$scores, file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCA_Genus_Score.csv"))
 # Columns PC1-PC3 represent the loadings in each axis. 'dist' is sum of squares for loadings of PC1 and PC2 and used to order the features.
 write.csv(t1$res_ordination$loading, file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCA_Genus_Loading.csv"))
-
+# loading_arrow = TRUE: show the arrows of loadings
 g1 <- t1$plot_ordination(plot_color = "Group", loading_arrow = TRUE)
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_PCA_Genus.png"), g1, base_aspect_ratio = 1.25, dpi = 300, base_height = 6)
 
@@ -141,6 +142,7 @@ cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_DCA_Genus.png"), 
 
 # group distances within Cropping treatments
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo, group = "Cropping", measure = "bray")
+# If it is not necessary to conduct separate analyses for each fertilization treatment group, please set: by_group = NULL or remove the parameter 
 t1$cal_group_distance(within_group = TRUE, by_group = "Fertilization")
 # manipulate res_group_distance to remove the distances between same group
 t1$res_group_distance %<>% .[!.$Fertilization %in% c("CK vs CK", "NPK vs NPK", "NPKS vs NPKS"), ]
@@ -173,6 +175,7 @@ cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_bray_Fertilizatio
 
 
 
+
 # one-way perMANOVA for all groups
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo, measure = "bray")
 t1$cal_manova(manova_all = TRUE, group = "Group")
@@ -194,6 +197,7 @@ t1$cal_manova(manova_set = "Cropping*Fertilization")
 write.csv(t1$res_manova, file.path(output_dir, "BetaDiv_rarefy_rhizo_perMANOVA_twoway.csv"))
 
 
+
 # ANOSIM overall test for all groups
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo, measure = "bray")
 t1$cal_anosim(paired = FALSE, group = "Group")
@@ -208,6 +212,7 @@ write.csv(t1$res_anosim, file.path(output_dir, "BetaDiv_rarefy_rhizo_ANOSIM_pair
 t1 <- trans_beta$new(dataset = tmp_microtable_rarefy_rhizo, measure = "bray")
 t1$cal_anosim(paired = TRUE, group = "Fertilization", by_group = "Cropping")
 write.csv(t1$res_anosim, file.path(output_dir, "BetaDiv_rarefy_rhizo_ANOSIM_bygroup.csv"))
+
 
 
 # permdisp method: test the dispersion of variances

@@ -101,6 +101,7 @@ dir.create(tmp_dir)
 method <- "maaslin2"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel, standardize = FALSE, fixed_effects = group, 
 	tmp_input_maaslin2 = file.path(tmp_dir, "maaslin2_tmp_input"), tmp_output_maaslin2 = file.path(tmp_dir, "maaslin2_tmp_output"))
+# In the table, coef: the fitted linear model coefficients; stderr: the standard error of coefficients
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
 # GMPR + wilcox
@@ -128,7 +129,7 @@ write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_single
 
 
 #############################################
-##  ASV level   single factor  3 groups  ##
+##  ASV level   single factor  3 groups    ##
 #############################################
 
 group <- "Fertilization"
@@ -208,7 +209,7 @@ save(tmp_Wrench_wilcox, file = file.path(output_dir, paste0("ASV_Fertilization_"
 
 
 #############################################
-##  ASV level   multiple factors  ##
+##  ASV level   multiple factors           ##
 #############################################
 
 formula <- "Cropping+Fertilization"

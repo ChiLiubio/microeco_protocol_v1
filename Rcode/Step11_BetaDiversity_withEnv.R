@@ -38,7 +38,7 @@ tmp_microtable_rarefy_rhizo$cal_betadiv(method = measure)
 
 # dbRDA: distance-based RDA
 method <- "dbRDA"
-# standardize = TRUE: standardize variables
+# standardize = TRUE: standardize variables; env_cols: which columns are selected from the sample_table of tmp_microtable_rarefy_rhizo
 t1 <- trans_env$new(dataset = tmp_microtable_rarefy_rhizo, env_cols = 7:19, standardize = TRUE)
 t1$cal_ordination(method = method, use_measure = "bray")
 # get the significance of the terms
@@ -55,6 +55,7 @@ write.csv(t1$res_ordination_terms, file.path(output_dir, "BetaDiv_rarefy_rhizo_d
 write.csv(t1$res_ordination_axis, file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_axissig.csv"))
 
 # transform raw results for visualization
+# min_perc_env: scale up the minimum of environmental factor arrows; multiply by the maximum distance between samples and origin.
 t1$trans_ordination(adjust_arrow_length = TRUE, min_perc_env = 0.2, max_perc_env = 1)
 # save the transformed data of scores and arrows to the directory
 write.csv(t1$res_ordination_trans$df_sites, file.path(output_dir, "BetaDiv_rarefy_rhizo_dbRDA_trans_sample.csv"))
@@ -63,7 +64,7 @@ write.csv(t1$res_ordination_trans$df_arrows, file.path(output_dir, "BetaDiv_rare
 g1 <- t1$plot_ordination(plot_color = "Group", plot_shape = "Group")
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_dbRDA.png"), g1, base_aspect_ratio = 1.2, dpi = 300, base_height = 6)
 
-# with feature selection
+# feature_sel = TRUE: perform feature selection
 t1$cal_ordination(method = method, use_measure = "bray", feature_sel = TRUE)
 t1$trans_ordination(adjust_arrow_length = TRUE, min_perc_env = 0.2, max_perc_env = 1)
 # Figure 3e
@@ -143,7 +144,7 @@ write.csv(t1$res_mantel, file.path(output_dir, "BetaDiv_mantel_rhizo_bray_byCrop
 
 
 #########################################
-# correlation
+# scatter plot with correlation fitting
 t1 <- trans_env$new(dataset = tmp_microtable_rarefy_rhizo, env_cols = 7:19, standardize = TRUE)
 # Figure 3f
 g1 <- t1$plot_scatterfit(

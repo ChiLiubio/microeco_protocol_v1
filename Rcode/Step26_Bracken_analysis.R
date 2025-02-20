@@ -38,6 +38,7 @@ g2 <- tmp$plot_bar(others_color = "grey70", facet = c("Compartment", "Fertilizat
 tmp <- trans_abund$new(dataset = tmp_microtable, taxrank = "Genus", use_percentage = FALSE)
 g3 <- tmp$plot_bar(others_color = "grey70", facet = c("Compartment", "Fertilization", "Cropping"), xtext_keep = FALSE, bar_full = FALSE)
 
+# generate a combined figure
 p1 <- ggpubr::ggarrange(g1, g2, g3, ncol = 1, nrow = 3, heights = c(1, 1, 1))
 
 cowplot::save_plot(file.path(output_dir, "Bracken_barplot_rawabund.png"), p1, base_aspect_ratio = 1.1, dpi = 300, base_height = 11)
@@ -204,6 +205,7 @@ cowplot::save_plot(file.path(output_dir, "Bracken_PCA_Species_Rhizosphere.png"),
 tmp_microtable <- clone(Bracken_microtable_relTRUE_K1)
 tmp_microtable$cal_abund(rel = TRUE)
 
+# select Rhizosphere soil data
 tmp_microtable_rhizo <- clone(tmp_microtable)
 tmp_microtable_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
 tmp_microtable_rhizo$tidy_dataset()
@@ -230,7 +232,7 @@ write.csv(t1$res_diff, file.path(output_dir, "Bracken_betareg_Genus.csv"))
 
 t1$res_diff %<>% .[.$Factors != "(Intercept)", ]
 t1$res_diff %<>% .[!is.na(.$Estimate), ]
-# further filter features
+# filter features without extreme significance
 tmp_table <- t1$res_diff
 tmp_feature_1 <- tmp_table %>% .[.$Factors == "CroppingRC" & grepl("**", .$Significance, fixed = TRUE), ] %>% .$Taxa
 tmp_feature_2 <- tmp_table %>% .[.$Factors == "FertilizationNPK" & grepl("**", .$Significance, fixed = TRUE), ] %>% .$Taxa

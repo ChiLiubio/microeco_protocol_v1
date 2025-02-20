@@ -64,7 +64,7 @@ tmp_mtobj <- microtable$new(otu_table = tmp1, tax_table = tmp_microtable_rhizo$t
 
 # use trans_venn class to analyze the features intersections
 tmp_transvennobj <- trans_venn$new(tmp_mtobj, ratio = "numratio", name_joint = "-")
-# only show the elements with a relative large number
+# only show the groups with a relative large number
 tmp_transvennobj$data_summary %<>% .[.$Counts > 4, ]
 
 # Figure 4a
@@ -91,8 +91,6 @@ tmp_transvennobj_mt_abund <- trans_abund$new(dataset = tmp_transvennobj_mt, taxr
 g2 <- tmp_transvennobj_mt_abund$plot_bar(bar_full = FALSE, legend_text_italic = T, xtext_angle = 50, order_x = tmp_x) + ylab("Ratio (%)") + 
 	theme(legend.position = "left", plot.margin = unit(c(0, 0, 0, 4), "cm"))
 cowplot::save_plot(file.path(output_dir, "diff_methods_singlefactor_threegroups_venn_comp_Genus.png"), g2, base_aspect_ratio = 1.5, dpi = 300, base_height = 8)
-
-
 
 
 

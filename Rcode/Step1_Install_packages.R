@@ -25,7 +25,7 @@ install.packages("GUniFrac")
 # for some statistics
 install.packages("agricolae")
 
-# generate significant letters
+# generate significant letters in the post hoc test
 install.packages("FSA")
 install.packages("rcompanion")
 
@@ -48,7 +48,7 @@ install.packages("kernlab")
 install.packages("xgboost")
 # determine significance of features in random forest model
 install.packages("rfPermute")
-# ROC curve analysis
+# ROC curve
 install.packages("multiROC")
 # for the analysis of multiple models
 install.packages("caretEnsemble")
@@ -84,6 +84,7 @@ install.packages("truncnorm")
 install.packages("Rmpfr")
 install.packages("extdata/SparseDOSSA2_0.99.2.tar.gz", repos = NULL, type = "source")
 
+# for rarefaction curve
 install.packages("extdata/mecodev_0.2.0.tar.gz", repos = NULL, type = "source")
 
 

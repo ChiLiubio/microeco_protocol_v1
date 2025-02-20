@@ -54,11 +54,12 @@ res_table %<>% dropallfactors(unfac2num = TRUE)
 
 # a customized theme
 tmp_theme <- theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 10), axis.title.y = element_text(size = 14))
-
+# Figure 4c
 p1 <- res_table %>%
 	ggboxplot(x = "method", y = "power", color = "method", palette = "Dark2", add = "mean", xlab = "", ylab = "Power", size = 0.6, width = 0.6)
 p1 <- ggpar(p1, legend = "none", x.text.angle = 30) + tmp_theme
 
+# Figure 4d
 p2 <- res_table %>%
 	ggboxplot(x = "method", y = "fdr", color = "method", palette = "Dark2", add = "mean", xlab = "", ylab = "FDR", size = 0.6, width = 0.6)
 p2 <- ggpar(p2, legend = "none", x.text.angle = 30) + tmp_theme
@@ -67,12 +68,6 @@ p2 <- ggpar(p2, legend = "none", x.text.angle = 30) + tmp_theme
 # Figure 4c and 4d
 g1 <- ggarrange(p1, p2, ncol = 1)
 cowplot::save_plot(file.path(output_dir, "diff_methods_simulation_powerfdr.png"), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 8)
-
-
-
-
-
-
 
 
 

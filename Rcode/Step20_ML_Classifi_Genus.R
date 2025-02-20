@@ -70,8 +70,10 @@ cowplot::save_plot(file.path(output_dir, paste0("Classification_", taxa_level, "
 t1$cal_ROC(input = "train")
 write.csv(t1$res_ROC$res_roc, file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_model_rf_ROC_train.csv")))
 write.csv(t1$res_ROC$res_pr, file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_model_rf_PR_train.csv")))
+# ROC curve
 g1 <- t1$plot_ROC()
 cowplot::save_plot(file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_model_rf_ROC_train.png")), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 6)
+# PR curve
 g1 <- t1$plot_ROC(plot_type = "PR")
 cowplot::save_plot(file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_model_rf_PR_train.png")), g1, base_aspect_ratio = 1.1, dpi = 300, base_height = 6)
 

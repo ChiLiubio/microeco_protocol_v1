@@ -60,11 +60,15 @@ tmp_sel_metab_table %<>% .[, colnames(.) %in% tmp_sel_features]
 
 
 # perform correlation analysis for different compartments
+
+# Rhizosphere soil
 tmp_amplicon_microtable_rhizo <- clone(tmp_amplicon_microtable)
 tmp_amplicon_microtable_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
 tmp_amplicon_microtable_rhizo$tidy_dataset()
 
+# use add_data parameter for the externally provided data
 tmp_transenv <- trans_env$new(dataset = tmp_amplicon_microtable_rhizo, add_data = tmp_sel_metab_table, standardize = FALSE)
+# Spearman correlation
 tmp_transenv$cal_cor(cor_method = "spearman", use_data = "other", p_adjust_method = "fdr", other_taxa = select_taxa)
 write.csv(tmp_transenv$res_cor, file.path(output_dir, "Metabolome_Genera_cor_spearman_Rhizosphere.csv"))
 
@@ -74,7 +78,7 @@ g1 <- tmp_transenv$plot_cor(cluster_ggplot = "both", cluster_height_rows = 0.3, 
 cowplot::save_plot(file.path(output_dir, "Metabolome_Genera_cor_spearman_Rhizosphere.png"), g1, base_aspect_ratio = 1.6, dpi = 300, base_height = 7)
 
 
-
+# Bulk soil
 tmp_amplicon_microtable_bulk <- clone(tmp_amplicon_microtable)
 tmp_amplicon_microtable_bulk$sample_table %<>% .[.$Compartment == "Bulk soil", ]
 tmp_amplicon_microtable_bulk$tidy_dataset()
