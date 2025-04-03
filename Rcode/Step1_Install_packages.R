@@ -92,7 +92,7 @@ install.packages("extdata/mecodev_0.2.0.tar.gz", repos = NULL, type = "source")
 ######################################################################
 # Test whether each package has been correctly installed
 library(microeco)
-if(packageVersion("microeco") < '1.13.0'){stop("Minimum version of microeco package should be 1.13.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
+if(packageVersion("microeco") < '1.14.0'){stop("Minimum version of microeco package should be 1.14.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
 library(file2meco)
 if(packageVersion("file2meco") < '0.9.0'){stop("Minimum version of file2meco package should be 0.9.0! Current version is ", packageVersion("file2meco"), " ! Please reinstall it!")}
 library(ANCOMBC)
