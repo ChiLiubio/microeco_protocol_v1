@@ -26,8 +26,14 @@ set.seed(123)
 
 tmp_microtable <- clone(amplicon_16S_microtable_CLR)
 
-# filter low abundance
-tmp_microtable$filter_taxa(rel_abund = 0.0005)
+# filter ASVs based on the customized standards
+# As an example, we first perform low-abundance filtering based on the unnormalized raw data, and then conduct screening on the CLR-normalized data
+load("Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable.RData")
+tmp <- clone(amplicon_16S_microtable)
+tmp$filter_taxa(rel_abund = 0.001)
+tmp_microtable$tax_table %<>% .[rownames(.) %in% rownames(tmp$tax_table), ]
+tmp_microtable$tidy_dataset()
+
 # add ASV to tax_table to generate ASV abundance in the taxa_abund list, which is the input data in the trans_classifier class
 tmp_microtable$add_rownames2taxonomy(use_name = "ASV")
 # regenerate taxa_abund list with original abundance (i.e., CLR-normalized data); now there is a table called 'ASV' in the taxa_abund list
@@ -42,7 +48,7 @@ t1 <- trans_classifier$new(dataset = tmp_microtable, y.response = "Cropping", x.
 
 # Optional
 # standardize data; "nzv" means removing features with near zero variance
-t1$cal_preProcess(method = c("center", "scale", "nzv"))
+# t1$cal_preProcess(method = c("center", "scale", "nzv"))
 
 # generate training and testing data set
 t1$cal_split(prop.train = 3/4)
@@ -52,9 +58,9 @@ write.csv(t1$data_test, file.path(output_dir, paste0("Classification_", taxa_lev
 
 # Optional
 # feature selection or add other customized operation to select features
-t1$cal_feature_sel(boruta.maxRuns = 300, boruta.pValue = 0.05)
+# t1$cal_feature_sel(boruta.maxRuns = 300, boruta.pValue = 0.05)
 # save selected feature data to the directory
-write.csv(t1$data_feature, file.path(output_dir, paste0("Classification_", taxa_level, "_featuresel_boruta_featuredata.csv")))
+# write.csv(t1$data_feature, file.path(output_dir, paste0("Classification_", taxa_level, "_featuresel_boruta_featuredata.csv")))
 
 
 # add set_trainControl to conveniently use trainControl function to pass customized parameters
