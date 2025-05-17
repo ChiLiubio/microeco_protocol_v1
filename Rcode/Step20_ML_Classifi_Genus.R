@@ -39,19 +39,18 @@ y_response <- "Cropping"
 # create trans_classifier object
 t1 <- trans_classifier$new(dataset = tmp_microtable, y.response = y_response, x.predictors = taxa_level)
 
-# Optional
-# standardize data; "nzv" means removing features with near zero variance
-t1$cal_preProcess(method = c("center", "scale", "nzv"))
 
 # generate train and test set
 t1$cal_split(prop.train = 3/4)
 write.csv(t1$data_train, file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_split_data_train.csv")))
 write.csv(t1$data_test, file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_split_data_test.csv")))
 
-# Optional
-# feature selection or add other customized or manual selected data into the object
+# ##### Optional: preprocessing. "nzv" means removing features with near zero variance; "center" subtracts the mean; "scale" divides by the standard deviation
+# t1$cal_preProcess(method = c("center", "scale", "nzv"))
+
+# Optional: feature selection
 t1$cal_feature_sel(boruta.maxRuns = 300, boruta.pValue = 0.05)
-write.csv(t1$data_feature, file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_featuresel_boruta_featuredata.csv")))
+write.csv(t1$data_train, file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_featuresel_boruta_traindata.csv")))
 
 # add set_trainControl to conveniently use trainControl function to pass customized parameters
 t1$set_trainControl()
@@ -112,9 +111,6 @@ cowplot::save_plot(file.path(output_dir, paste0("Classification_", taxa_level, "
 y_response <- "Fertilization"
 
 t1 <- trans_classifier$new(dataset = tmp_microtable, y.response = y_response, x.predictors = taxa_level)
-# standardize data; "nzv" means removing features with near zero variance
-t1$cal_preProcess(method = c("center", "scale", "nzv"))
-write.csv(t1$data_feature, file.path(output_dir, paste0("Classification_", taxa_level, "_", y_response, "_preProcess_featuredata.csv")))
 
 # generate train and test set
 t1$cal_split(prop.train = 3/4)

@@ -39,14 +39,15 @@ y_response <- "Cropping"
 # create trans_classifier object
 t1 <- trans_classifier$new(dataset = tmp_microtable, y.response = y_response, x.predictors = taxa_level)
 
-# Optional
-# standardize data; "nzv" means removing features with near zero variance; "center" subtracts the mean; "scale" divides by the standard deviation
-t1$cal_preProcess(method = c("center", "scale", "nzv"))
-
 # generate train and test set
 t1$cal_split(prop.train = 3/4)
 write.csv(t1$data_train, file.path(output_dir, paste0("Classification_", y_response, "_split_data_train.csv")))
 write.csv(t1$data_test, file.path(output_dir, paste0("Classification_", y_response, "_split_data_test.csv")))
+
+# Optional
+# For non-targeted metabolomics data, there were significant differences in the scales of different metabolites. To make the data comparable, we performed preprocessing.
+# "nzv" means removing features with near zero variance; "center" subtracts the mean; "scale" divides by the standard deviation
+t1$cal_preProcess(method = c("center", "scale", "nzv"))
 
 # Optional
 # feature selection or add other customized or manual selected data into the object
@@ -99,13 +100,14 @@ save(t1, file = file.path(output_dir, paste0("Classification_", y_response, "_mo
 y_response <- "Fertilization"
 
 t2 <- trans_classifier$new(dataset = tmp_microtable, y.response = y_response, x.predictors = taxa_level)
-# standardize data; "nzv" means removing features with near zero variance
-t2$cal_preProcess(method = c("center", "scale", "nzv"))
 
 # generate train and test set
 t2$cal_split(prop.train = 3/4)
 write.csv(t2$data_train, file.path(output_dir, paste0("Classification_", y_response, "_split_data_train.csv")))
 write.csv(t2$data_test, file.path(output_dir, paste0("Classification_", y_response, "_split_data_test.csv")))
+
+# standardize data; "nzv" means removing features with near zero variance
+t2$cal_preProcess(method = c("center", "scale", "nzv"))
 
 # feature selection or add other customized or manual selected data into the object
 t2$cal_feature_sel(boruta.maxRuns = 300, boruta.pValue = 0.05)

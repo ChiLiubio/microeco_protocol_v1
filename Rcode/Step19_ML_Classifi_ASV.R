@@ -46,9 +46,6 @@ taxa_level <- "ASV"
 
 t1 <- trans_classifier$new(dataset = tmp_microtable, y.response = "Cropping", x.predictors = taxa_level)
 
-# Optional
-# standardize data; "nzv" means removing features with near zero variance
-# t1$cal_preProcess(method = c("center", "scale", "nzv"))
 
 # generate training and testing data set
 t1$cal_split(prop.train = 3/4)
@@ -56,12 +53,8 @@ t1$cal_split(prop.train = 3/4)
 write.csv(t1$data_train, file.path(output_dir, paste0("Classification_", taxa_level, "_split_data_train.csv")))
 write.csv(t1$data_test, file.path(output_dir, paste0("Classification_", taxa_level, "_split_data_test.csv")))
 
-# Optional
-# feature selection or add other customized operation to select features
+# ###### Optional: feature selection
 # t1$cal_feature_sel(boruta.maxRuns = 300, boruta.pValue = 0.05)
-# save selected feature data to the directory
-# write.csv(t1$data_feature, file.path(output_dir, paste0("Classification_", taxa_level, "_featuresel_boruta_featuredata.csv")))
-
 
 # add set_trainControl to conveniently use trainControl function to pass customized parameters
 t1$set_trainControl()
