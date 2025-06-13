@@ -75,9 +75,9 @@ Here is how to use it:
 # First, navigate to the target folder, which should contain the Rcode and Input folders.
 cd ~/your_path_containing_Rcode_Input
 # pull the image; docker pull or sudo docker pull
-docker pull quay.io/chiliubio/microeco_protocol:v1.14.0
+docker pull quay.io/chiliubio/microeco_protocol:v1.15.0
 # docker run or sudo docker run; --rm: the container will be deleted when it exits; -it: interactive
-docker run -it --rm -v $(pwd):/rmeco_protocol quay.io/chiliubio/microeco_protocol:v1.14.0 /bin/bash
+docker run -it --rm -v $(pwd):/rmeco_protocol quay.io/chiliubio/microeco_protocol:v1.15.0 /bin/bash
 R
 ```
 
