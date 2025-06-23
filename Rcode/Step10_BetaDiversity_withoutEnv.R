@@ -168,7 +168,8 @@ t1$cal_group_distance_diff(method = "anova")
 g1 <- t1$plot_group_distance()
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_bray_Fertilization_between_boxplot.png"), g1, base_aspect_ratio = 1.25, dpi = 300, base_height = 6)
 #	for each cropping treatment
-t1$cal_group_distance_diff(method = "anova", by_group = "Cropping")
+# t1$cal_group_distance_diff(method = "anova", by_group = "Cropping")
+t1$cal_group_distance_diff(method = "wilcox", by_group = "Cropping")
 # Figure 3c
 g1 <- t1$plot_group_distance(xtext_angle = 0, add = "jitter") + theme(legend.title = element_blank(), legend.text = element_text(size = 12))
 cowplot::save_plot(file.path(output_dir, "BetaDiv_Rhizo_rarefy_bray_Fertilization_between_boxplot_byCropping.png"), g1, base_aspect_ratio = 1.25, dpi = 300, base_height = 6)
