@@ -66,6 +66,13 @@ We strongly recommend that users take some time to understand the purpose of eac
 appropriately review the help documents of functions in the corresponding class of microeco package. 
 
 
+## Citation
+
+Liu, C., Wang, J., Wang, Y. et al. Crop rotation and fertilization shape the microbiomes of maize rhizosphere soil with distinct mechanisms. 
+Plant and Soil 507, 89–108 (2025). https://doi.org/10.1007/s11104-024-06847-9
+
+
+
 ## Docker
 
 We also provide a Docker image version, in which all the packages listed in "Rcode/Step1_Install_packages.R" have been installed.
