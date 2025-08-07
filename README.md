@@ -68,6 +68,10 @@ appropriately review the help documents of functions in the corresponding class 
 
 ## Citation
 
+Chi Liu, Felipe R. P. Mansoldo, Hankang Li, Alane Beatriz Vermelho, Raymond Jianxiong Zeng, Xiangzhen Li & Minjie Yao. 
+A workflow for statistical analysis and visualization of microbiome omics data using the R microeco package. 
+Nature Protocols (2025). https://doi.org/10.1038/s41596-025-01239-4
+
 Liu, C., Wang, J., Wang, Y. et al. Crop rotation and fertilization shape the microbiomes of maize rhizosphere soil with distinct mechanisms. 
 Plant and Soil 507, 89–108 (2025). https://doi.org/10.1007/s11104-024-06847-9
 
