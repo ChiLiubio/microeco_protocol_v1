@@ -35,17 +35,17 @@ abund <- 0.0005
 # select core taxa for each compartment
 # If users need to use other column names in their own data, they can simply replace 'Compartment' with the other column names and 'Bulk soil' with the group information within it.
 S <- clone(tmp_microtable)
-S$sample_table %<>% .[.$Compartment != "Bulk soil", ]
+S$sample_table %<>% .[.$Compartment == "Bulk soil", ]
 S$tidy_dataset()
 S$filter_taxa(rel_abund = abund, freq = freq)
 
 RS <- clone(tmp_microtable)
-RS$sample_table %<>% .[.$Compartment != "Rhizosphere", ]
+RS$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
 RS$tidy_dataset()
 RS$filter_taxa(rel_abund = abund, freq = freq)
 
 R <- clone(tmp_microtable)
-R$sample_table %<>% .[.$Compartment != "Endophyte", ]
+R$sample_table %<>% .[.$Compartment == "Endophyte", ]
 R$tidy_dataset()
 R$filter_taxa(rel_abund = abund, freq = freq)
 
