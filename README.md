@@ -1,5 +1,5 @@
 
-# A comprehensive protocol for statistical analysis and visualization of microbiome omics data with R microeco and file2meco packages
+# A comprehensive workflow for statistical analysis and visualization of microbiome omics data with R microeco and file2meco packages
 
 
 
@@ -48,7 +48,7 @@ or change the resource download mirror. First, find the nearest mirror to you at
 and then modify the CRAN and Bioconductor mirrors in R with the following example code：
 
 ```r
-mirror = "https://mirrors.tuna.tsinghua.edu.cn"
+mirror = "https://mirrors.pku.edu.cn"
 options("repos" = c(CRAN = paste0(mirror, "/CRAN/")))
 options(BioC_mirror = paste0(mirror, "/bioconductor/"))
 ```
@@ -74,30 +74,6 @@ Nature Protocols (2025). https://doi.org/10.1038/s41596-025-01239-4
 
 Liu, C., Wang, J., Wang, Y. et al. Crop rotation and fertilization shape the microbiomes of maize rhizosphere soil with distinct mechanisms. 
 Plant and Soil 507, 89–108 (2025). https://doi.org/10.1007/s11104-024-06847-9
-
-
-
-## Docker
-
-We also provide a Docker image version, in which all the packages listed in "Rcode/Step1_Install_packages.R" have been installed.
-Here is how to use it:
-
-```bash
-# First, navigate to the target folder, which should contain the Rcode and Input folders.
-cd ~/your_path_containing_Rcode_Input
-# pull the image; docker pull or sudo docker pull
-docker pull quay.io/chiliubio/microeco_protocol:v1.15.0
-# docker run or sudo docker run; --rm: the container will be deleted when it exits; -it: interactive
-docker run -it --rm -v $(pwd):/rmeco_protocol quay.io/chiliubio/microeco_protocol:v1.15.0 /bin/bash
-R
-```
-
-After entering the R environment, you can run the code directly without needing to install any R packages.
-
-```r
-source("Rcode/Step2_Import_amplicon_files.R")
-```
-
 
 
 
