@@ -74,7 +74,7 @@ Nature Protocols (2025). https://doi.org/10.1038/s41596-025-01239-4
 
 Chi Liu, Jialong Wang, Yaosheng Wang, Lujun Li, Zhihan Feng, Yuchen Xian, Yanqiong Jiang, Jinfeng Yu, Tingting Tong, Xiangzhen Li & Minjie Yao. 
 Crop rotation and fertilization shape the microbiomes of maize rhizosphere soil with distinct mechanisms. 
-Plant and Soil 507, 89–108 (2025). https://doi.org/10.1007/s11104-024-06847-9
+Plant and Soil, 507: 89–108 (2025). https://doi.org/10.1007/s11104-024-06847-9
 
 
 
