@@ -74,6 +74,7 @@ write.csv(tmp_transenv$res_cor, file.path(output_dir, "Metabolome_Genera_cor_spe
 
 # Figure 7e
 tmp_transenv$res_cor$Taxa %<>% gsub(".*g__", "", .)
+# Warning messages may come from the compatibility of latest ggtree and ggplot2 packages, and donot affect the operation and result
 g1 <- tmp_transenv$plot_cor(cluster_ggplot = "both", cluster_height_rows = 0.3, cluster_height_cols = 0.15)
 cowplot::save_plot(file.path(output_dir, "Metabolome_Genera_cor_spearman_Rhizosphere.png"), g1, base_aspect_ratio = 1.6, dpi = 300, base_height = 7)
 
