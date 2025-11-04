@@ -77,7 +77,7 @@ Crop rotation and fertilization shape the microbiomes of maize rhizosphere soil 
 Plant and Soil, 507: 89–108 (2025). https://doi.org/10.1007/s11104-024-06847-9
 
 
+## Issues
 
-
-
+Please report bugs or submit suggestions in GitHub [Issues](https://github.com/ChiLiubio/microeco_protocol_v1/issues). Thanks!
 
