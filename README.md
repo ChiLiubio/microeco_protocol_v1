@@ -1,5 +1,5 @@
 
-# A comprehensive workflow for statistical analysis and visualization of microbiome omics data with R microeco and file2meco packages
+# A comprehensive workflow for statistical analysis and visualization of microbiome omics data with the R microeco and file2meco packages
 
 
 
