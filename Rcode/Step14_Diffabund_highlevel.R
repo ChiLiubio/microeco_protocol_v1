@@ -7,6 +7,7 @@
 # load packages
 library(microeco)
 library(magrittr)
+library(ggplot2)
 ######################################################
 # create an output directory if it does not exist
 output_dir <- "./Output/1.Amplicon/Stage6_Diff_abund"
