@@ -44,6 +44,7 @@ save(tmp_microtable_rhizo, file = file.path(output_dir, "tmp_microtable_rhizo.RD
 #############################################
 ##  ASV level   single factor  2 groups    ##
 #############################################
+# Note that this part primarily focuses on differential analysis and does not involve extensive visualization. Only several visualization examples are demonstrated.
 
 group <- "Cropping"
 taxlevel <- "ASV"
@@ -57,6 +58,8 @@ write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_single
 method <- "metagenomeSeq"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel)
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
+tmp$plot_volcano()
+tmp$plot_diff_abund()
 
 # ALDEx2_t
 method <- "ALDEx2_t"
@@ -140,7 +143,8 @@ method <- "metagenomeSeq"
 tmp_metagenomeSeq <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel)
 write.csv(tmp_metagenomeSeq$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_threegroups_", method, ".csv")))
 save(tmp_metagenomeSeq, file = file.path(output_dir, paste0("ASV_Fertilization_", method, ".RData")), compress = TRUE)
-
+tmp_metagenomeSeq$plot_diff_abund()
+tmp_metagenomeSeq$plot_volcano(select_group = 1)
 
 # ALDEx2_t
 method <- "ALDEx2_t"
