@@ -322,7 +322,49 @@ t1 <- trans_abund$new(dataset = merged_16S_Kraken, taxrank = "Genus", ntaxa = 20
 t1$plot_bar(others_color = "grey70", facet = "Method", xtext_size = 5, xtext_angle = 30)
 
 
+###########################################################
+# Optional
+# ASV-Species correlation analysis
+# This will help infer which species the ASV originates from
 
+library(dplyr)
+library(microeco)
+library(magrittr)
+library(ggplot2)
+
+# load all the required data
+# load 16S data
+input_path <- "./Output/1.Amplicon/Stage2_amplicon_microtable/amplicon_16S_microtable_rarefy.RData"
+load(input_path)
+# load Bracken data
+input_path <- "Output/2.Metagenome/Stage9_Bracken/Bracken_microtable_relFALSE.RData"
+load(input_path)
+
+# Normalize data: TSS; to relative abundance
+tmp_tss_16S <- trans_norm$
+	new(amplicon_16S_microtable_rarefy)$
+	norm("TSS")
+
+tmp_tss_Bracken <- trans_norm$
+	new(Bracken_microtable_relFALSE)$
+	norm("TSS")
+
+# select a genus: Bacillus
+filter_genus <- "g__Bacillus"
+
+tmp_tss_16S_select <- clone(tmp_tss_16S)
+tmp_tss_16S_select$tax_table %<>% .[.$Genus == filter_genus, ]
+tmp_tss_16S_select$tidy_dataset()
+
+tmp_tss_Bracken_select <- clone(tmp_tss_Bracken)
+tmp_tss_Bracken_select$tax_table %<>% .[.$Genus == filter_genus, ]
+tmp_tss_Bracken_select$tidy_dataset()
+
+# correlation analysis
+
+tmp_transenv <- trans_env$new(dataset = NULL, add_data = t(tmp_tss_Bracken_select$otu_table), standardize = FALSE)
+tmp_transenv$cal_cor(method = "spearman", add_abund_table = t(tmp_tss_16S_select$otu_table))
+tmp_transenv$plot_cor() + theme(plot.margin = margin(t = 10, r = 10, b = 10, l = 80, unit = "pt"))
 
 
 
