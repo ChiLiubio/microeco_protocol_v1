@@ -38,9 +38,14 @@ tmp_feature <- tmp_feature[, -c(1:2)]
 tmp_feature[is.na(tmp_feature)] <- 0
 
 # construct a taxonomic table
-tmp_tax <- data.frame(class = rownames(tmp_feature))
-rownames(tmp_tax) <- tmp_tax[, 1]
+# if no mapping file exists, please use this way
+# tmp_tax <- data.frame(class = rownames(tmp_feature)); rownames(tmp_tax) <- tmp_tax[, 1]
 
+# use Metabolome_mapping.xlsx
+file_path <- "./Input/3.Metabolome/Metabolome_mapping.xlsx"
+tmp_tax <- as.data.frame(read_excel(file_path, col_names = TRUE), stringsAsFactors = FALSE)
+rownames(tmp_tax) <- tmp_tax[, 1]
+tmp_tax <- tmp_tax[, -1]
 
 
 # use sample_table in 16S data
