@@ -8,6 +8,8 @@
 library(microeco)
 library(magrittr)
 library(readxl)
+library(igraph)
+
 ######################################################
 output_dir <- "Output/3.Metabolome/Stage10_Metabolome"
 # load metabolome microtable object

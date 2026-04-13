@@ -51,8 +51,12 @@ tmp_tax <- tmp_tax[, -1]
 # use sample_table in 16S data
 tmp_mt <- microtable$new(otu_table = tmp_feature, tax_table = tmp_tax, sample_table = amplicon_16S_microtable$sample_table)
 tmp_mt$tidy_dataset()
+
+# add feature name to tax_table
+tmp_mt$add_rownames2tax(use_name = "feature")
+
 # calculate abundance
-tmp_mt$cal_abund(rel = FALSE)
+tmp_mt$cal_abund(rel = FALSE, select_cols = "feature")
 
 # save the object to RData
 metab_microtable <- clone(tmp_mt)

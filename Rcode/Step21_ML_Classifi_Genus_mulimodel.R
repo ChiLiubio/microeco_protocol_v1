@@ -39,7 +39,7 @@ t1 <- trans_classifier$new(dataset = tmp_microtable, y.response = "Cropping", x.
 # analyze different models; 'rf': random forest; 'svmRadial': support vector machine; xgbLinear: eXtreme Gradient Boosting. 
 # For more models, please see: https://topepo.github.io/caret/available-models.html
 # If the function cal_split is not performed, there is no data_train in the object. Thus, the function cal_caretList will use all the samples for the training.
-t1$cal_caretList(methodList = c('rf', 'svmRadial', 'xgbLinear'))
+t1$cal_caretList(methodList = c('rf', 'svmRadial'))
 # analyze a set of resampling results and reshape the metric values
 t1$cal_caretList_resamples()
 # res_caretList_resamples is the original result

@@ -98,12 +98,9 @@ tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = g
 # In the table, log2FoldChange: bias-corrected coefficients; lfcSE: standard errors of the coefficients; stat: log2FoldChange / lfcSE
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
-# maaslin2
-tmp_dir <- "tmp_maaslin2"
-dir.create(tmp_dir)
-method <- "maaslin2"
-tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel, standardize = FALSE, fixed_effects = group, 
-	tmp_input_maaslin2 = file.path(tmp_dir, "maaslin2_tmp_input"), tmp_output_maaslin2 = file.path(tmp_dir, "maaslin2_tmp_output"))
+# maaslin3
+method <- "maaslin"
+tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel, standardize = FALSE, fixed_effects = group)
 # In the table, coef: the fitted linear model coefficients; stderr: the standard error of coefficients
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
@@ -179,14 +176,11 @@ tmp_linda <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, gro
 write.csv(tmp_linda$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_threegroups_", method, ".csv")))
 save(tmp_linda, file = file.path(output_dir, paste0("ASV_Fertilization_", method, ".RData")), compress = TRUE)
 
-# maaslin2
-tmp_dir <- "tmp_maaslin2"
-dir.create(tmp_dir)
-method <- "maaslin2"
-tmp_maaslin2 <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel, standardize = FALSE, fixed_effects = group, 
-	tmp_input_maaslin2 = file.path(tmp_dir, "maaslin2_tmp_input"), tmp_output_maaslin2 = file.path(tmp_dir, "maaslin2_tmp_output"))
-write.csv(tmp_maaslin2$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_threegroups_", method, ".csv")))
-save(tmp_maaslin2, file = file.path(output_dir, paste0("ASV_Fertilization_", method, ".RData")), compress = TRUE)
+# maaslin3
+method <- "maaslin"
+tmp_maaslin <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel, standardize = FALSE, fixed_effects = group)
+write.csv(tmp_maaslin$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_threegroups_", method, ".csv")))
+save(tmp_maaslin, file = file.path(output_dir, paste0("ASV_Fertilization_", method, ".RData")), compress = TRUE)
 
 # GMPR + wilcox
 tmp <- trans_norm$new(tmp_microtable_rhizo)

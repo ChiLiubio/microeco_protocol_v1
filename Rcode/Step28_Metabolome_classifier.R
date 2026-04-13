@@ -28,10 +28,10 @@ tmp_microtable$filter_taxa(freq = 0.2)
 number_filter <- nrow(tmp_microtable$otu_table)
 
 # generate taxa_abund list for further analysis; use raw abundance
-tmp_microtable$cal_abund(rel = FALSE)
+tmp_microtable$cal_abund(rel = FALSE, select_cols = "feature")
 
 ######################################################
-taxa_level <- "class"
+taxa_level <- "feature"
 
 # Cropping treatments: two groups
 y_response <- "Cropping"

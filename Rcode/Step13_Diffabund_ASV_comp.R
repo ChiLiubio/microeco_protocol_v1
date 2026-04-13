@@ -25,7 +25,7 @@ load(file.path(output_dir, "ASV_Fertilization_DESeq2.RData"))
 load(file.path(output_dir, "ASV_Fertilization_edgeR.RData"))
 load(file.path(output_dir, "ASV_Fertilization_ancombc2.RData"))
 load(file.path(output_dir, "ASV_Fertilization_linda.RData"))
-load(file.path(output_dir, "ASV_Fertilization_maaslin2.RData"))
+load(file.path(output_dir, "ASV_Fertilization_maaslin.RData"))
 load(file.path(output_dir, "ASV_Fertilization_wilcox_GMPR.RData"))
 load(file.path(output_dir, "ASV_Fertilization_wilcox_Wrench.RData"))
 ######################################################
@@ -41,7 +41,7 @@ diff_taxa_list[["DESeq2"]] <- tmp_DESeq2$res_diff %>% .[grepl("*", .$Significanc
 diff_taxa_list[["edgeR"]] <- tmp_edgeR$res_diff %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
 diff_taxa_list[["ancombc2"]] <- tmp_ancombc2$res_diff %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
 diff_taxa_list[["linda"]] <- tmp_linda$res_diff %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
-diff_taxa_list[["maaslin2"]] <- tmp_maaslin2$res_diff %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
+diff_taxa_list[["maaslin"]] <- tmp_maaslin$res_diff %>% .[.$by_group == "abundance", ] %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
 diff_taxa_list[["GMPR_wilcox"]] <- tmp_GMPR_wilcox$res_diff %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
 diff_taxa_list[["Wrench_wilcox"]] <- tmp_Wrench_wilcox$res_diff %>% .[grepl("*", .$Significance, fixed = TRUE), ] %>% .$Taxa %>% gsub(".*\\|", "", .)
 

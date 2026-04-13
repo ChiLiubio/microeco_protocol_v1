@@ -61,7 +61,7 @@ BiocManager::install("ALDEx2")
 BiocManager::install("ANCOMBC")
 BiocManager::install("edgeR")
 BiocManager::install("DESeq2")
-BiocManager::install("Maaslin2")
+BiocManager::install("maaslin3")
 
 # for data conversion
 BiocManager::install("phyloseq")
@@ -92,7 +92,7 @@ install.packages("extdata/mecodev_0.2.0.tar.gz", repos = NULL, type = "source")
 ######################################################################
 # Test whether each package has been correctly installed
 library(microeco)
-if(packageVersion("microeco") < '2.0.0'){stop("Minimum version of microeco package should be 2.0.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
+if(packageVersion("microeco") < '2.1.0'){stop("Minimum version of microeco package should be 2.1.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
 library(file2meco)
 if(packageVersion("file2meco") < '0.9.0'){stop("Minimum version of file2meco package should be 0.9.0! Current version is ", packageVersion("file2meco"), " ! Please reinstall it!")}
 library(ANCOMBC)
@@ -120,10 +120,11 @@ library(metagenomeSeq)
 library(ALDEx2)
 library(edgeR)
 library(DESeq2)
-library(Maaslin2)
+library(maaslin3)
 library(phyloseq)
 library(microbiome)
 library(ggtree)
 library(ropls)
+library(igraph)
 library(SparseDOSSA2)
 library(mecodev)

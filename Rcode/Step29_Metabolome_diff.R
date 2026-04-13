@@ -30,13 +30,16 @@ tmp_microtable <- clone(metab_microtable)
 # filter features
 tmp_microtable$otu_table %<>% .[rownames(.) %in% tmp_sel_features, ]
 tmp_microtable$tidy_dataset()
+
+taxa_level <- "feature"
+
 # regenerate the taxa_abund list for the differential test
-tmp_microtable$cal_abund(rel = FALSE)
+tmp_microtable$cal_abund(rel = FALSE, select_cols = taxa_level)
 
 
 
 # Linear regression using log-transformed data
-t1 <- trans_diff$new(dataset = tmp_microtable, method = "lm", formula = "Compartment + Cropping + Fertilization", taxa_level = "class", filter_thres = 0, transformation = "log")
+t1 <- trans_diff$new(dataset = tmp_microtable, method = "lm", formula = "Compartment + Cropping + Fertilization", taxa_level = taxa_level, filter_thres = 0, transformation = "log")
 
 write.csv(t1$res_diff, file.path(output_dir, "Metabolome_diff_lm_log.csv"))
 
@@ -66,7 +69,7 @@ tmp_microtable_rhizo <- clone(tmp_microtable)
 tmp_microtable_rhizo$sample_table %<>% .[.$Compartment == "Rhizosphere", ]
 tmp_microtable_rhizo$tidy_dataset()
 
-t1 <- trans_diff$new(dataset = tmp_microtable_rhizo, method = "anova", group = "Group", taxa_level = "class", transformation = "log")
+t1 <- trans_diff$new(dataset = tmp_microtable_rhizo, method = "anova", group = "Group", taxa_level = taxa_level, transformation = "log")
 
 write.csv(t1$res_diff, file.path(output_dir, "Metabolome_diff_ANOVA_log_Group.csv"))
 

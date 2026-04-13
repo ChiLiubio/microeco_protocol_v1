@@ -65,7 +65,7 @@ save(t1, file = file.path(output_dir, paste0("Regression_", taxa_level, "_", y_r
 
 
 # compare different models; rf: Random Forest; lm: Linear Regression; xgbLinear: eXtreme Gradient Boosting
-t1$cal_caretList(methodList = c('rf', 'lm', 'xgbLinear'))
+t1$cal_caretList(methodList = c('rf', 'lm'))
 # analyze a set of resampling results and reshape the metric values
 t1$cal_caretList_resamples()
 # visualize the performance of models
