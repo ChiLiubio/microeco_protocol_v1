@@ -10,7 +10,7 @@ library(magrittr)
 library(readxl)
 
 # check the microeco package version again
-if(packageVersion("microeco") < '2.1.0'){stop("Minimum version of microeco package should be 2.1.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
+if(packageVersion("microeco") < '2.2.0'){stop("Minimum version of microeco package should be 2.2.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
 
 if(!require("stringdist")){install.packages("stringdist")}
 
@@ -62,6 +62,26 @@ head(test$res_node_table)
 
 
 
+################################################
+########## Pathway analysis
+# Map metabolites to pathways based on a database
+tmp$cal_pathway(db_type = "kegg")
+
+# Perform pathway enrichment analysis for target metabolites using Fisher's exact test
+# as an example, use tmp_sel_features in step 28
+tmp$cal_pathway_enrich(target_metabs = tmp_sel_features, p_adjust_method = "BH", p_cutoff = 0.05, min_metab_count = 3)
+
+tmp$plot_pathway_enrich()
+
+
+#### Following steps can be used to get the metabolite-pathway network
+# res_net <- tmp$cal_pathway_network()
+
+# test <- trans_network$new()
+# test$res_network <- res_net
+# test$cal_module()
+# test$get_node_table()
+# head(test$res_node_table)
 
 
 
