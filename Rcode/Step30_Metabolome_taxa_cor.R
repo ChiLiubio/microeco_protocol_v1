@@ -71,7 +71,7 @@ tmp_amplicon_microtable_rhizo$tidy_dataset()
 # use add_data parameter for the externally provided data
 tmp_transenv <- trans_env$new(dataset = tmp_amplicon_microtable_rhizo, add_data = tmp_sel_metab_table, standardize = FALSE)
 # Spearman correlation
-tmp_transenv$cal_cor(cor_method = "spearman", use_data = "other", p_adjust_method = "fdr", other_taxa = select_taxa)
+tmp_transenv$cal_cor(method = "spearman", use_data = "other", p_adjust_method = "fdr", other_taxa = select_taxa)
 write.csv(tmp_transenv$res_cor, file.path(output_dir, "Metabolome_Genera_cor_spearman_Rhizosphere.csv"))
 
 # Figure 7e
@@ -87,7 +87,7 @@ tmp_amplicon_microtable_bulk$sample_table %<>% .[.$Compartment == "Bulk soil", ]
 tmp_amplicon_microtable_bulk$tidy_dataset()
 
 tmp_transenv <- trans_env$new(dataset = tmp_amplicon_microtable_bulk, add_data = tmp_sel_metab_table, standardize = FALSE)
-tmp_transenv$cal_cor(cor_method = "spearman", use_data = "other", p_adjust_method = "fdr", other_taxa = select_taxa)
+tmp_transenv$cal_cor(method = "spearman", use_data = "other", p_adjust_method = "fdr", other_taxa = select_taxa)
 write.csv(tmp_transenv$res_cor, file.path(output_dir, "Metabolome_Genera_cor_spearman_Bulk.csv"))
 
 # Figure 7f

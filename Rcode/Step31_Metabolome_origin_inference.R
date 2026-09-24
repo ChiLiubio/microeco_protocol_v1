@@ -1,5 +1,5 @@
 ## 
-## Metabolite origin inference from V2.1.0
+## Metabolite origin inference from V2.4.0
 ## 
 
 
@@ -10,7 +10,7 @@ library(magrittr)
 library(readxl)
 
 # check the microeco package version again
-if(packageVersion("microeco") < '2.2.0'){stop("Minimum version of microeco package should be 2.2.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
+if(packageVersion("microeco") < '2.4.0'){stop("Minimum version of microeco package should be 2.4.0! Current version is ", packageVersion("microeco"), " ! Please reinstall it!")}
 
 if(!require("stringdist")){install.packages("stringdist")}
 

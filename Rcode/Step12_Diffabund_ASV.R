@@ -64,7 +64,8 @@ tmp$plot_diff_abund()
 # ALDEx2_t
 method <- "ALDEx2_t"
 tmp <- trans_diff$new(dataset = tmp_microtable_rhizo, method = method, group = group, taxa_level = taxlevel)
-# In result, 'wi.ep': expected p-value of the Wilcoxon Rank Sum test; 'wi.eBH': corresponding expected value of the Benjamini-Hochberg corrected p-value for each feature
+# In result, 'we.ep': expected p-value of the Welch's t test; 'we.eBH': corresponding expected value of the Benjamini-Hochberg corrected p-value for each feature
+# The 'P.adj' and 'Significance' columns are taken from 'we.eBH' by default in microeco >= 2.4.0 (the ALDEx2_sig parameter, default c("we.eBH", "kw.eBH"))
 write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_singlefactor_twogroups_", method, ".csv")))
 
 # ALDEx2_kw
@@ -107,7 +108,7 @@ write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_single
 # GMPR + wilcox
 tmp <- trans_norm$new(tmp_microtable_rhizo)
 norm_obj <- tmp$norm(method = "GMPR")
-norm_obj$add_rownames2taxonomy("ASV")
+norm_obj$add_rownames2tax("ASV")
 norm_obj$cal_abund(rel = FALSE)
 
 method <- "wilcox"
@@ -117,7 +118,7 @@ write.csv(tmp$res_diff, file.path(output_dir, paste0("Diff_abund_test_ASV_single
 # Wrench + wilcox
 tmp <- trans_norm$new(tmp_microtable_rhizo)
 norm_obj <- tmp$norm(method = "Wrench", condition = group)
-norm_obj$add_rownames2taxonomy("ASV")
+norm_obj$add_rownames2tax("ASV")
 norm_obj$cal_abund(rel = FALSE)
 
 method <- "wilcox"
@@ -185,7 +186,7 @@ save(tmp_maaslin, file = file.path(output_dir, paste0("ASV_Fertilization_", meth
 # GMPR + wilcox
 tmp <- trans_norm$new(tmp_microtable_rhizo)
 norm_obj <- tmp$norm(method = "GMPR")
-norm_obj$add_rownames2taxonomy("ASV")
+norm_obj$add_rownames2tax("ASV")
 norm_obj$cal_abund(rel = FALSE)
 
 method <- "wilcox"
@@ -196,7 +197,7 @@ save(tmp_GMPR_wilcox, file = file.path(output_dir, paste0("ASV_Fertilization_", 
 # Wrench + wilcox
 tmp <- trans_norm$new(tmp_microtable_rhizo)
 norm_obj <- tmp$norm(method = "Wrench", condition = group)
-norm_obj$add_rownames2taxonomy("ASV")
+norm_obj$add_rownames2tax("ASV")
 norm_obj$cal_abund(rel = FALSE)
 
 method <- "wilcox"

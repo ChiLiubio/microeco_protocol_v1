@@ -8,6 +8,9 @@
 The minimum required R version for this protocol is 4.4.0, and it is recommended to install the latest version.
 Windows, macOS, or Linux systems can all be used to run the process.
 
+The protocol also requires the microeco package (>= 2.4.0) and the file2meco package (>= 0.9.0).
+Both are checked automatically at the beginning of "Step1_Install_packages.R".
+
 
 ## File description
 

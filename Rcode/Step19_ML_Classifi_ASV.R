@@ -35,7 +35,7 @@ tmp_microtable$tax_table %<>% .[rownames(.) %in% rownames(tmp$tax_table), ]
 tmp_microtable$tidy_dataset()
 
 # add ASV to tax_table to generate ASV abundance in the taxa_abund list, which is the input data in the trans_classifier class
-tmp_microtable$add_rownames2taxonomy(use_name = "ASV")
+tmp_microtable$add_rownames2tax(use_name = "ASV")
 # regenerate taxa_abund list with original abundance (i.e., CLR-normalized data); now there is a table called 'ASV' in the taxa_abund list
 tmp_microtable$cal_abund(rel = FALSE)
 

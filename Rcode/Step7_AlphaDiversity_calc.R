@@ -9,7 +9,6 @@
 # load packages
 library(microeco)
 library(magrittr)
-library(mecodev)
 ###########################
 # create an output directory if it does not exist
 output_dir <- "./Output/1.Amplicon/Stage4_AlphaDiversity"
@@ -29,7 +28,9 @@ load(input_path)
 ###########################
 
 # rarefaction curve based on the Shannon-Weiver diversity
-# use trans_rarefy class in mecodev package
+# use trans_rarefy class in microeco package
+# alphadiv: one or more alpha diversity measurements for the rarefaction curve; depth: the rarefying depths
+# Note: each depth should not be larger than the maximum of the sample sums; the samples with fewer reads than a given depth are removed at that depth
 tmp <- trans_rarefy$new(amplicon_16S_microtable, alphadiv = c("Shannon"), depth = c(0, 10, 50, 500, 1000, 2000, 4000, 6000, 10000, 15000, 20000, 25000, 30000))
 # show_samplename: add the sample labels; For the colors of different groups, please use color parameter, such as: color = "Group"
 g1 <- tmp$plot_rarefy(show_samplename = TRUE, color_values = rep("grey50", 100), show_legend = FALSE)
