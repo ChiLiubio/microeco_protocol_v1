@@ -2,8 +2,14 @@
 # A comprehensive workflow for statistical analysis and visualization of microbiome omics data with the R microeco and file2meco packages
 
 
+## MecoToolkit: Interactive use without package configuration
 
-## Requirements
+The [MecoToolkit](https://mecotoolkit.com/) app has been developed for interactive microbiome data analysis on the local computer. 
+All the analysis in this protocol has been implemented in the MecoToolkit app (https://mecotoolkit.com/).
+Currently, only Windows is supported.
+
+
+## Requirements for command line use
 
 The minimum required R version for this protocol is 4.4.0, and it is recommended to install the latest version.
 Windows, macOS, or Linux systems can all be used to run the process.
